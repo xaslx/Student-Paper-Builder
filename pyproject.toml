@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "student paper builder"
+version = "0.1.0"
+description = ""
+authors = ["Maksim <knyazev.maksim2852@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.115.8"}
+alembic = "^1.14.1"
+docxtpl = "^0.19.1"
+dishka = "^1.4.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
