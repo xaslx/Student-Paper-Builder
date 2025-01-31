@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block styles %}<link rel="stylesheet" href="src/presentation/static/css/main.css">{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Конструктор курсовых и дипломных работ</title>
 </head>
 <body>
@@ -29,13 +30,16 @@
                 <span class="profile-icon">👤</span>
                 <span>Мой профиль</span>
                 <div class="profile-menu" id="profileMenu">
+                    
                     <button onclick="aboutService()">О сервисе</button>
                     {% if user %}
-                        <p>{{ user.username }}</p>
                         <button onclick="deleteAllDocuments()">Удалить все документы</button>
-                        <button onclick="logout()">Выйти</button>
+                        <button type="submit" onclick=logout()>Выйти</button>
                     {% else %}
-                        <button onclick="login()">Войти</button>
+                        
+                        <a href="{{ url_for('login:page') }}" class="no-style-link">
+                            <button>Войти</button>
+                        </a>
                     {% endif %}
                 </div>
             </div>
@@ -46,6 +50,7 @@
         {% block content %}{% endblock %}
     </div>
     <input type="hidden" id="aboutUrl" value="{{ url_for('about:page') }}">
+    <input type="hidden" id="loginUrl" value="{{ url_for('login:page') }}">
     <script src="src/presentation/static/js/main.js"></script>
 </body>
 </html>
