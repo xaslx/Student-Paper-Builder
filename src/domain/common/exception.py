@@ -1,18 +1,15 @@
 from dataclasses import dataclass
-from typing import ClassVar
+from fastapi import HTTPException, status
 
 
 @dataclass(eq=False)
-class AppError(Exception):
+class AppErrorException(HTTPException):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    detail = 'Ошибка приложения'
 
-    @property
-    def message(self) -> str:
-        return 'An app error occurred'
+    
 
 
 @dataclass(eq=False)
-class DomainError(AppError):
-
-    @property
-    def message(self) -> str:
-        return 'A domain error occurred'
+class DomainErrorException(HTTPException):
+    ...

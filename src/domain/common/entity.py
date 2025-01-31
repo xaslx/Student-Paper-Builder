@@ -8,7 +8,7 @@ from datetime import datetime
 class BaseEntity(ABC):
     
     uuid: str = field(
-        default_factory=lambda: str(uuid4),
+        default_factory=lambda: str(uuid4()),
     )
     created_at: datetime = field(
         default_factory=datetime.now,
