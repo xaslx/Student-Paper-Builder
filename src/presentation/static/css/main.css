@@ -144,3 +144,38 @@ body {
 .main-content h2 {
     color: #6200ea;
 }
+
+.no-style-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.no-style-link:visited {
+    color: inherit;
+}
+
+.no-style-link:focus, 
+.no-style-link:hover, 
+.no-style-link:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    flex: 1;
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+}
