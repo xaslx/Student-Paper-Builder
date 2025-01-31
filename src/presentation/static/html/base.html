@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="src/presentation/static/css/main.css">
+    <title>Конструктор курсовых и дипломных работ</title>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1><a href="{{ url_for('main:page') }}" style="text-decoration: none; color: inherit;">Конструктор</a></h1>
+        <button>Новый документ</button>
+        <hr>
+        <div class="history">
+            <h3>История документов</h3>
+            <ul>
+                {% if documents %}
+                    {% for document in documents %}
+                        <li><a href="{{ document.url }}">{{ document.name }}</a></li>
+                    {% endfor %}
+                {% else %}
+                    <li><a href="#" style="pointer-events: none; color: gray;">Нет созданных документов</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="profile">
+            <div class="profile-container" onclick="toggleProfileMenu()">
+                <span class="profile-icon">👤</span>
+                <span>Мой профиль</span>
+                <div class="profile-menu" id="profileMenu">
+                    <button onclick="aboutService()">О сервисе</button>
+                    {% if user %}
+                        <p>{{ user.username }}</p>
+                        <button onclick="deleteAllDocuments()">Удалить все документы</button>
+                        <button onclick="logout()">Выйти</button>
+                    {% else %}
+                        <button onclick="login()">Войти</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+    <input type="hidden" id="aboutUrl" value="{{ url_for('about:page') }}">
+    <script src="src/presentation/static/js/main.js"></script>
+</body>
+</html>
