@@ -1,17 +1,18 @@
 from dishka import Provider, Scope, from_context, provide
 from fastapi import Request
+from fastapi.templating import Jinja2Templates
 from motor.motor_asyncio import AsyncIOMotorClient
-from src.application.use_cases.users.login import LoginUserUseCase
+
 from src.application.services.auth import AuthServiceImpl, BaseAuthService
-from src.application.services.hash import BCryptHashService, BaseHashService
+from src.application.services.hash import BaseHashService, BCryptHashService
 from src.application.services.jwt import JWTService, JWTServiceImpl
+from src.application.use_cases.users.login import LoginUserUseCase
 from src.application.use_cases.users.register import RegisterUserUseCase
+from src.application.use_cases.users.reset_password import ResetPasswordCheckTokenUseCase, ResetPasswordUseCase
 from src.domain.user.entity import User
 from src.infrastructure.repositories.users.base import BaseUsersRepository
 from src.infrastructure.repositories.users.mongo import MongoDBUsersRepository
 from src.settings.config import Config
-from fastapi.templating import Jinja2Templates
-
 
 
 class AppProvider(Provider):
@@ -87,6 +88,33 @@ class AppProvider(Provider):
             jwt_service=jwt_service,
             user_repository=user_repository,
         )
+        
+    @provide(scope=Scope.REQUEST)
+    def get_reset_password_use_case(
+        self,
+        jwt_service: JWTService,
+        user_repository: BaseUsersRepository,
+    ) -> ResetPasswordUseCase:
+        
+        return ResetPasswordUseCase(
+            user_repository=user_repository,
+            jwt_service=jwt_service,
+        )
+    
+    @provide(scope=Scope.REQUEST)
+    def get_reset_password_check_token_use_case(
+        self,
+        jwt_service: JWTService,
+        user_repository: BaseUsersRepository,
+        hash_service: BaseHashService,
+    ) -> ResetPasswordCheckTokenUseCase:
+        
+        return ResetPasswordCheckTokenUseCase(
+            user_repository=user_repository,
+            jwt_service=jwt_service,
+            hash_service=hash_service,
+        )    
+
 
     #dependencies
     @provide(scope=Scope.REQUEST)
