@@ -125,7 +125,7 @@ async function register(event) {
                 title: "Регистрация успешна",
                 text: "Вы будете перенаправлены на страницу входа",
                 icon: "success",
-                timer: 2000,
+                timer: 2500,
                 showConfirmButton: false,
             }).then(() => {
                 window.location.href = "/login";
@@ -163,3 +163,100 @@ function togglePasswordVisibility(inputId) {
     const passwordInput = document.getElementById(inputId);
     passwordInput.type = passwordInput.type === "password" ? "text" : "password";
 }
+
+
+async function resetPassword(event) {
+    event.preventDefault();
+
+    const email = document.getElementById('email').value;
+
+    try {
+        const response = await fetch('/reset_password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: email }),
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                title: "Успешно!",
+                text: "Письмо для сброса пароля отправлено на ваш email.",
+                icon: "success",
+                confirmButtonText: "ОК",
+            }).then(() => {
+                window.location.href = "/login";
+            });
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                title: "Ошибка",
+                text: errorData.detail || "Произошла ошибка при отправке запроса.",
+                icon: "error",
+                confirmButtonText: "ОК",
+            });
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+        Swal.fire({
+            title: "Ошибка",
+            text: "Произошла ошибка при отправке запроса.",
+            icon: "error",
+            confirmButtonText: "ОК",
+        });
+    }
+}
+
+async function resetPasswordConfirm() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (!token) {
+        Swal.fire({
+            title: "Ошибка",
+            text: "Токен отсутствует в URL",
+            icon: "error",
+            confirmButtonText: "ОК",
+        });
+        return;
+    }
+
+    try {
+        const response = await fetch(`/reset_password/confirm?token=${encodeURIComponent(token)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            Swal.fire({
+                title: "Успешно!",
+                text: "Пароль успешно сброшен, новый пароль отправлен на почту",
+                icon: "success",
+                confirmButtonText: "ОК",
+            }).then(() => {
+                window.location.href = "/login";
+            });
+        } else {
+            const errorData = await response.json();
+            Swal.fire({
+                title: "Ошибка",
+                text: errorData.detail || "Не удалось сбросить пароль",
+                icon: "error",
+                confirmButtonText: "ОК",
+            });
+        }
+    } catch (error) {
+        console.error("Ошибка при сбросе пароля:", error);
+        Swal.fire({
+            title: "Ошибка",
+            text: "Произошла ошибка при сбросе пароля",
+            icon: "error",
+            confirmButtonText: "ОК",
+        });
+    }
+}
+
+document.getElementById("reset-password-btn").addEventListener("click", resetPasswordConfirm);
