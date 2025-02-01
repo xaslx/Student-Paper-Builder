@@ -21,7 +21,7 @@ class LoginUserUseCase:
             raise UserNotFoundException()
         
         access_token: str
-        access_token, expire = self.jwt_service.create_access_token({'sub': user.uuid})
+        access_token, expire = self.jwt_service.create_access_token({'sub': user.uuid}, days=10)
         max_age: int = (expire - datetime.now()).total_seconds()
         
         return access_token, max_age
