@@ -48,3 +48,20 @@ class MongoDBUsersRepository(BaseUsersRepository, BaseMongoDBRepository):
             return None
         
         return convert_document_to_user_entity_with_hashed_password(document=user_document)
+    
+    
+    async def get_user_by_email(self, email: str) -> User | None:
+        user_document = await self._collection.find_one(filter={'email': email})
+        if not user_document:
+            return None
+        
+        return convert_document_to_user_entity(document=user_document)
+    
+    async def update_user_password(self, uuid: str, hashed_password: str) -> bool:
+
+        result = await self._collection.update_one(
+            filter={'uuid': uuid},
+            update={'$set': {'hashed_password': hashed_password}}
+        )
+        
+        return result.modified_count > 0
