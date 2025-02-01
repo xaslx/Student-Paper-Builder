@@ -10,7 +10,7 @@ from dataclasses import dataclass
 class JWTService(ABC):
     
     @abstractmethod
-    def create_access_token(self, data: dict) -> tuple[str, int]:
+    def create_access_token(self, data: dict, **kwargs) -> tuple[str, int]:
         ...
 
     @abstractmethod
@@ -23,9 +23,9 @@ class JWTServiceImpl(JWTService):
 
     config: Config
 
-    def create_access_token(self, data: dict) -> tuple[str, int]:
+    def create_access_token(self, data: dict, **kwargs) -> tuple[str, int]:
         to_encode = data.copy()
-        expire = datetime.now() + timedelta(days=10)
+        expire = datetime.now() + timedelta(**kwargs)
         to_encode.update({'exp': expire})
         return jwt.encode(to_encode, self.config.jwt.secret_key, self.config.jwt.algorithm), expire
 
