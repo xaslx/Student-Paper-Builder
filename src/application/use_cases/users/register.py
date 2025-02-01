@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from src.infrastructure.broker_messages.rabbitmq.publisher import publish
 from src.application.services.hash import BaseHashService
 from src.domain.user.entity import User
 from src.domain.user.exception import UserAlreadyExistsException
@@ -30,5 +31,11 @@ class RegisterUserUseCase:
         )
 
         await self.user_repository.add_user(user=user_entity, hashed_password=hashed_password)
+        
+        await publish(
+            to=user.email,
+            subject='Успешная регистрация',
+            body=f'Вы успешно зарегистрировались.\nВаш логин: {user.username}',
+        )
 
         return user_entity

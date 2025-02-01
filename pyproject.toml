@@ -11,6 +11,12 @@ fastapi = {extras = ["all"], version = "^0.115.8"}
 alembic = "^1.14.1"
 docxtpl = "^0.19.1"
 dishka = "^1.4.2"
+motor = "^3.7.0"
+bcrypt = "4.0.1"
+passlib = "^1.7.4"
+python-jose = "^3.3.0"
+aiormq = "^6.8.1"
+aiosmtplib = "^3.0.2"
 
 
 [build-system]

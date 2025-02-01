@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from dishka.integrations import fastapi as fastapi_integration
 from fastapi.staticfiles import StaticFiles
-from src.presentation.api.controllers.setup_routers import setup_controllers
+from src.presentation.controllers.setup_routers import setup_controllers
 from src.infrastructure.ioc.ioc import AppProvider
 from src.settings.config import Config
 

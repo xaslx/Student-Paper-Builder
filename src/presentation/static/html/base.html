@@ -11,7 +11,12 @@
 
     <div class="sidebar">
         <h1><a href="{{ url_for('main:page') }}" style="text-decoration: none; color: inherit;">Конструктор</a></h1>
-        <button>Новый документ</button>
+        {% if user %}
+            <button id="newDocumentButton"><a class="no-style-link" href="#">Новый документ</a></button>
+        {% else %}
+            <button><a class="no-style-link" href="{{ url_for('login:page') }}">Новый документ</a></button>
+        {% endif %}
+        <input type="hidden" id="isAuthenticated" value="{{ 'true' if user else 'false' }}">
         <hr>
         <div class="history">
             <h3>История документов</h3>

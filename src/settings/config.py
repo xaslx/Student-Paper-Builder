@@ -14,6 +14,20 @@ class JwtConfig(BaseModel):
     algorithm: str = Field(alias='ALGORITHM')
 
 
+class RabbitMQ(BaseModel):
+    rabbitmq_user: str = Field(alias='RABBITMQ_DEFAULT_USER')
+    rabbitmq_password: str = Field(alias='RABBITMQ_DEFAULT_PASS')
+
+
+class SMTP(BaseModel):
+    smtp_host: str = Field(alias='SMTP_HOST')
+    smtp_port: int = Field(alias='SMTP_PORT', default=465)
+    smtp_user: str = Field(alias='SMTP_USER')
+    smtp_pass: str = Field(alias='SMTP_PASS')
+        
+
 class Config(BaseModel):
     mongodb: MongoDB = Field(default_factory=lambda: MongoDB(**env))
     jwt: JwtConfig = Field(default_factory=lambda: JwtConfig(**env))
+    rabbitmq: RabbitMQ = Field(default_factory=lambda: RabbitMQ(**env))
+    smtp: SMTP = Field(default_factory=lambda: SMTP(**env))
