@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from src.domain.common.entity import BaseEntity
+from src.domain.user.value_object import Username
 
 
 @dataclass
 class User(BaseEntity):
-    username: str
+    username: Username
     email: str
     
     @classmethod
