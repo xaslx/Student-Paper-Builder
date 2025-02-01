@@ -6,6 +6,8 @@ from src.domain.user.entity import User
 from src.domain.user.exception import UserAlreadyExistsException
 from src.infrastructure.repositories.users.base import BaseUsersRepository
 from src.presentation.schemas.user import UserRegister
+from src.domain.user.value_object import Username
+
 
 
 @dataclass
@@ -24,9 +26,10 @@ class RegisterUserUseCase:
             raise UserAlreadyExistsException()
         
         hashed_password: str = self.hash_service.get_password_hash(password=user.password)
-
+        
+        username: Username = Username(value=user.username)
         user_entity: User = User.create_user(
-            username=user.username,
+            username=username,
             email=user.email,
         )
 
