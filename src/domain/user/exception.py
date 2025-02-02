@@ -14,7 +14,7 @@ class IncorrectUsernameOrPasswordException(DomainErrorException):
 
 class InvalidUsernameOrPasswordException(DomainErrorException):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-    detail = 'Логин или Пароль должны быть на английском'
+    detail = 'Логин или Пароль должны быть на английском, из разрешенных символов разрешено только "_"'
 
 
 class UserNotFoundException(DomainErrorException):
@@ -29,6 +29,7 @@ class NotAccessErrorException(DomainErrorException):
 
 class UserIsNotPresentException(DomainErrorException):
     status_code = status.HTTP_401_UNAUTHORIZED
+    detail = 'Ошибка'
     
 
 class UsernameLengthException(DomainErrorException):
@@ -39,3 +40,8 @@ class UsernameLengthException(DomainErrorException):
 class PasswordLengthException(DomainErrorException):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
     detail = 'Пароль должен быть состоять от 6 до 30 символов'
+    
+
+class UserNotAuthenticatedException(DomainErrorException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    detail = 'Пользователь не аутентифицирован'

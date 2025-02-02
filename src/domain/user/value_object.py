@@ -9,7 +9,7 @@ import re
 class Username(BaseValueObject):
     
     def validate(self):
-        if not (4 <= len(self.value) <= 10):
+        if not (4 <= len(self.value) <= 15):
             raise UsernameLengthException()
         if not re.match(r'^[A-Za-z0-9_]+$', self.value):
             raise InvalidUsernameOrPasswordException()

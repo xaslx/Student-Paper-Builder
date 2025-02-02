@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from src.domain.document.value_object import TitlePage
-from src.domain.document.entity import Document
-from src.presentation.schemas.document import CreateDocument
-from src.infrastructure.repositories.documents.base import BaseDocumentsRepository
 
+from src.domain.document.entity import Document
+from src.domain.document.value_object import TitlePage
+from src.infrastructure.repositories.documents.base import \
+    BaseDocumentsRepository
+from src.presentation.schemas.document import CreateDocument
 
 
 @dataclass
@@ -26,6 +27,7 @@ class CreateDocumentUseCase:
         )
         new_document: Document = Document(
             user_uuid=user_uuid,
+            name=document.name,
             title_page=title_page,
             introduction=document.introduction,
             main_sections=document.main_sections,

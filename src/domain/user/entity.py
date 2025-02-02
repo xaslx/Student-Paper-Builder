@@ -9,7 +9,7 @@ class User(BaseEntity):
     email: str
     
     @classmethod
-    def create_user(cls, username: str, email: str) -> 'User':
+    def create_user(cls, username: Username, email: str) -> 'User':
         return cls(
             username=username,
             email=email,
