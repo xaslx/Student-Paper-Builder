@@ -61,3 +61,8 @@ alembic-revision:
 .PHONY: alembic-upgrade
 alembic-upgrade:
 	${EXEC} ${APP_CONTAINER} alembic upgrade head
+
+
+.PHONY: run-test
+run-test:
+	${EXEC} ${APP_CONTAINER} env PYTHONPATH=/app pytest -s -v
