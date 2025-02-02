@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+from src.domain.document.entity import Document
 from src.domain.user.entity import User
 
 
@@ -20,11 +21,12 @@ async def main_page(
     request: Request,
     template: Depends[Jinja2Templates],
     user: Depends[User],
+    documents: Depends[list[Document]],
 ) -> HTMLResponse:
 
     return template.TemplateResponse(
         request=request, 
-        context={'user': user},
+        context={'user': user, 'documents': documents},
         name='base.html',
     )
 
@@ -39,10 +41,11 @@ async def get_help_template(
     request: Request,
     template: Depends[Jinja2Templates],
     user: Depends[User],
+    documents: Depends[list[Document]],
 ) -> HTMLResponse:
     
     return template.TemplateResponse(
         request=request,
-        context={'user': user},
+        context={'user': user, 'documents': documents},
         name='about.html',
     )
