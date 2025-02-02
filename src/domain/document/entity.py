@@ -7,7 +7,7 @@ from src.domain.document.value_object import Section, TitlePage
 @dataclass(kw_only=True)
 class Document(BaseEntity):
     user_uuid: str
-    name: str = field(default='Новый документ')
+    name: str
     title_page: TitlePage
     introduction: str
     main_sections: list[Section]
