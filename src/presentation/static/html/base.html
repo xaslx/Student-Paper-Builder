@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block styles %}<link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Конструктор курсовых и дипломных работ</title>
 </head>
 <body>
 
     <div class="sidebar">
         <h1><a href="{{ url_for('main:page') }}" style="text-decoration: none; color: inherit;">Конструктор</a></h1>
-        {% if user %}
-            <button id="newDocumentButton"><a class="no-style-link" href="#">Новый документ</a></button>
-        {% else %}
-            <button><a class="no-style-link" href="{{ url_for('login:page') }}">Новый документ</a></button>
-        {% endif %}
+    
+        <button id="newDocumentButton">Новый документ</button>
+  
         <input type="hidden" id="isAuthenticated" value="{{ 'true' if user else 'false' }}">
         <hr>
         <div class="history">
@@ -23,7 +22,20 @@
             <ul>
                 {% if documents %}
                     {% for document in documents %}
-                        <li><a href="{{ document.url }}">{{ document.name }}</a></li>
+                    <li class="document-item">
+                        <a href="{{ url_for('documents:page', document_uuid=document.uuid) }}" class="document-link">
+                            <span class="document-text">
+                                {{ document.name }}
+                            </span>
+                            <span class="ellipsis" onclick="toggleMenu('menu-{{ document.uuid }}', event)"><b>...</b></span>
+                            <span class="document-text">
+                                {{ document.created_at.strftime('%d.%m.%y %H:%M') }}
+                            </span>
+                        </a>
+                        <div class="document-menu" id="menu-{{ document.uuid }}">
+                            <button onclick="confirmDeleteDocument('{{ document.uuid }}')">Удалить</button>
+                        </div>
+                    </li>
                     {% endfor %}
                 {% else %}
                     <li><a href="#" style="pointer-events: none; color: gray;">Нет созданных документов</a></li>
@@ -52,12 +64,14 @@
     </div>
 
     <div class="main-content">
-        {% block content %}{% endblock %}
+        {% block content %}
+        
+        {% endblock %}
     </div>
     <input type="hidden" id="aboutUrl" value="{{ url_for('about:page') }}">
     <input type="hidden" id="loginUrl" value="{{ url_for('login:page') }}">
     {% block scripts %}
-        <script src="{{ url_for('static', path='js/main.js') }}"></script>
+        <script src="{{ url_for('static', path='js/main.js') }}" defer></script>
     {% endblock %}
 </body>
 </html>
