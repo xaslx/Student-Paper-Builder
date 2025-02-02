@@ -14,6 +14,10 @@ class BaseEntity(ABC):
         default_factory=datetime.now,
         kw_only=True,
     )
+    updated_at: datetime = field(
+        default=None,
+        kw_only=True,
+    )
     
     def __hash__(self) -> int:
         return hash(self.uuid)
