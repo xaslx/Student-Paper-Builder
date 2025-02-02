@@ -6,8 +6,8 @@ from datetime import datetime
 
 
 
-@dataclass(kw_only=True)
-class TitlePage(BaseValueObject):
+@dataclass(kw_only=True, frozen=True)
+class TitlePage:
     
     type_of_work: str
     discipline: str
@@ -19,25 +19,12 @@ class TitlePage(BaseValueObject):
     faculty: str
     city: str
     teaching_position: str
+    created_at: datetime = field(default_factory=lambda: datetime.now())
+    updated_at: datetime | None = field(default=None)
 
 
-@dataclass
-class Introduction(BaseValueObject):
-    
-    text: str
-
-
-@dataclass
-class Conclusion(BaseValueObject):
-    
-    text: str
-
-
-@dataclass
-class ListSource(BaseValueObject):
-    list_text: list[str]
-    
-
-@dataclass
-class ListSupplement(BaseValueObject):
-    list_text: list[str]
+@dataclass(frozen=True, kw_only=True)
+class Section:
+    title: str
+    content: str
+    subsections: list['Section'] | None = field(default=None)

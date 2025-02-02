@@ -1,14 +1,16 @@
 from dataclasses import dataclass, field
 
-from domain.document.value_object import (Conclusion, Introduction, ListSource,
-                                          ListSupplement, TitlePage)
 from src.domain.common.entity import BaseEntity
+from src.domain.document.value_object import Section, TitlePage
 
 
 @dataclass(kw_only=True)
 class Document(BaseEntity):
+    user_uuid: str
+    name: str = field(default='Новый документ')
     title_page: TitlePage
-    introduction: Introduction
-    conclusion: Conclusion
-    list_source: ListSource
-    list_supplement: ListSupplement | None = field(default=None)
+    introduction: str
+    main_sections: list[Section]
+    conclusion: str
+    references: list[str]
+    appendices: list[str] | None = field(default=None)
