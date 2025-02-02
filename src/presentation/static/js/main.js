@@ -1,6 +1,4 @@
-async function createNewDocument() {
-    console.log("createNewDocument вызвана"); // Отладочный вывод
-
+document.getElementById("newDocumentButton").addEventListener("click", async () => {
     const isAuthenticated = document.getElementById("isAuthenticated").value === "true";
     if (!isAuthenticated) {
         Swal.fire({
@@ -12,66 +10,112 @@ async function createNewDocument() {
         return;
     }
 
-    try {
-        // Создаем объект с null для всех полей
-        const documentData = {
-            title_page: {
-                type_of_work: null,
-                discipline: null,
-                subject: null,
-                educational_institution: null,
-                year: null,
-                student_fullname: null,
-                teacher_fullname: null,
-                faculty: null,
-                city: null,
-                teaching_position: null,
-            },
-            introduction: null,
-            main_sections: [],
-            conclusion: null,
-            references: [],
-            appendices: [],
-        };
 
-        const response = await fetch('/documents', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(documentData),
-        });
+    const { value: documentName } = await Swal.fire({
+        title: "Создание нового документа",
+        input: "text",
+        inputLabel: "Введите название документа",
+        inputPlaceholder: "Например: Курсовая работа по программированию",
+        showCancelButton: true,
+        confirmButtonText: "Создать",
+        cancelButtonText: "Отмена",
+        inputValidator: (value) => {
+            if (!value) {
+                return "Название документа обязательно!";
+            }
+            if (value.length < 5 || value.length > 30) {
+                return "Название должно быть от 5 до 30 символов!";
+            }
+        },
+    });
 
-        if (response.ok) {
-            Swal.fire({
-                title: "Документ создан",
-                text: "Новый документ был успешно создан",
-                icon: "success",
-                timer: 2000,
-                showConfirmButton: false,
-            }).then(() => {
-                location.reload(); // Обновляем страницу, чтобы отобразить новый документ
+
+    if (documentName) {
+        try {
+            const documentData = {
+                title_page: {
+                    type_of_work: null,
+                    discipline: null,
+                    subject: null,
+                    educational_institution: null,
+                    year: null,
+                    student_fullname: null,
+                    teacher_fullname: null,
+                    faculty: null,
+                    city: null,
+                    teaching_position: null,
+                },
+                name: documentName,
+                introduction: null,
+                main_sections: [],
+                conclusion: null,
+                references: [],
+                appendices: [],
+            };
+
+            const response = await fetch('/documents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(documentData),
             });
-        } else {
-            const data = await response.json();
+
+            if (response.ok) {
+                const documentUuid = await response.json();
+                Swal.fire({
+                    title: "Документ создан",
+                    text: "Новый документ был успешно создан",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false,
+                }).then(() => {
+                    window.location.href = `/documents/${documentUuid}`;
+                });
+            } else {
+                const data = await response.json();
+                Swal.fire({
+                    title: "Ошибка",
+                    text: data.detail || "Не удалось создать новый документ",
+                    icon: "error",
+                    confirmButtonText: "ОК",
+                });
+            }
+        } catch (error) {
+            console.error("Ошибка при создании документа:", error);
             Swal.fire({
                 title: "Ошибка",
-                text: data.detail || "Не удалось создать новый документ",
+                text: "Произошла ошибка при создании документа",
                 icon: "error",
                 confirmButtonText: "ОК",
             });
         }
-    } catch (error) {
-        console.error("Ошибка при создании документа:", error);
-        Swal.fire({
-            title: "Ошибка",
-            text: "Произошла ошибка при создании документа",
-            icon: "error",
-            confirmButtonText: "ОК",
-        });
+    }
+});
+
+function toggleMenu(menuId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const menu = document.getElementById(menuId);
+    const isOpen = menu.classList.contains('open');
+
+    document.querySelectorAll('.document-menu').forEach(m => m.classList.remove('open'));
+
+    if (!isOpen) {
+        menu.classList.add('open');
     }
 }
 
+
+document.addEventListener('click', function(event) {
+    const isMenu = event.target.closest('.document-menu');
+    const isEllipsis = event.target.closest('.ellipsis');
+
+    if (!isMenu && !isEllipsis) {
+        document.querySelectorAll('.document-menu').forEach(menu => menu.classList.remove('open'));
+    }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     const newDocumentButton = document.getElementById("newDocumentButton");
@@ -444,28 +488,3 @@ async function deleteDocument(documentUuid) {
         });
     }
 }
-
-
-function toggleMenu(menuId, event) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const menu = document.getElementById(menuId);
-    const isOpen = menu.classList.contains('open');
-
-    document.querySelectorAll('.document-menu').forEach(m => m.classList.remove('open'));
-
-    if (!isOpen) {
-        menu.classList.add('open');
-    }
-}
-
-
-document.addEventListener('click', function(event) {
-    const isMenu = event.target.closest('.document-menu');
-    const isEllipsis = event.target.closest('.ellipsis');
-
-    if (!isMenu && !isEllipsis) {
-        document.querySelectorAll('.document-menu').forEach(menu => menu.classList.remove('open'));
-    }
-});

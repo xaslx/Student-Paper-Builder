@@ -4,7 +4,7 @@ body {
     padding: 0;
     display: flex;
     background-color: #f4f4f9;
-    color: #333;
+    color: black;
     min-height: 100vh;
 }
 
@@ -240,18 +240,15 @@ body {
 }
 .document-link {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     text-decoration: none;
     color: inherit;
     width: 100%;
 }
 .document-text {
-    flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-right: 10px;
 }
 .ellipsis {
     cursor: pointer;
@@ -259,11 +256,11 @@ body {
     font-size: 20px;
     color: #666;
     flex-shrink: 0;
-    margin-left: 30px;
+    margin-left: 60px;
     transition: color 0.3s ease;
 }
 .ellipsis:hover {
-    color: #888;
+    color: red;
 }
 .document-menu {
     display: none;
@@ -308,10 +305,26 @@ body {
 .document-menu.open {
     display: block;
 }
+.document-item {
+    position: relative;
+    padding: 10px 0;
+}
+
+.document-text-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.document-date {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    color: #888;
+}
 
 
 
-/* 404 /*
 /* Стили для страницы 404 */
 .error-container {
     display: flex;

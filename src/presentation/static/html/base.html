@@ -24,12 +24,17 @@
                     {% for document in documents %}
                     <li class="document-item">
                         <a href="{{ url_for('documents:page', document_uuid=document.uuid) }}" class="document-link">
-                            <span class="document-text">
-                                {{ document.name }}
+                            <span class="document-text-wrapper">
+                                <span class="document-text">
+                                    {{ document.name }}
+                                </span>
                             </span>
-                            <span class="ellipsis" onclick="toggleMenu('menu-{{ document.uuid }}', event)"><b>...</b></span>
-                            <span class="document-text">
+                            
+                            <span class="document-date">
                                 {{ document.created_at.strftime('%d.%m.%y %H:%M') }}
+                            </span>
+                            <span class="ellipsis" onclick="toggleMenu('menu-{{ document.uuid }}', event)">
+                                <b>...</b>
                             </span>
                         </a>
                         <div class="document-menu" id="menu-{{ document.uuid }}">
