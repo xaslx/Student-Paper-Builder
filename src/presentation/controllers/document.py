@@ -93,8 +93,9 @@ async def add_document(
     new_document: CreateDocument,
     user: Depends[User],
     use_case: Depends[CreateDocumentUseCase],
-):
+) -> str:
+    
     if not user:
         raise UserNotAuthenticatedException()
-    res : str = await use_case.execute(document=new_document, user_uuid=user.uuid)
     
+    return await use_case.execute(document=new_document, user_uuid=user.uuid)
