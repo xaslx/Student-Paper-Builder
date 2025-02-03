@@ -21,3 +21,64 @@
 .section-button:hover {
     background-color: #3700b3;
 }
+
+/* status */
+.section-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-button {
+    margin-right: 10px;
+}
+
+.status-filled {
+    color: green;
+    font-weight: bold;
+}
+
+.status-empty {
+    color: red;
+    font-weight: bold;
+}
+
+
+
+
+.custom-modal .swal2-input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.custom-modal {
+    font-size: 14px;
+}
+
+
+
+.custom-intro-modal,
+.custom-conclusion-modal {
+    width: 600px !important;
+    max-width: 90% !important;
+    margin: 0 auto !important;
+    font-size: 16px;
+}
+
+.custom-intro-modal textarea.swal2-textarea,
+.custom-conclusion-modal textarea.swal2-textarea {
+    width: calc(100% - 20px) !important;
+    height: 250px !important;
+    resize: none;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px auto;
+    display: block;
+}

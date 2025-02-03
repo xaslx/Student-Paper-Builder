@@ -2,18 +2,61 @@
 {% block styles %}
 {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', path='css/create_document.css') }}">
-
 {% endblock %}
 {% block content %}
     <h2>Конструктор документа <span style="color: black;">({{document.name}})</span></h2>
     <div class="button-container">
-        <button class="section-button">Титульный лист</button>
-        <button class="section-button">Оглавление</button>
-        <button class="section-button">Список сокращений</button>
-        <button class="section-button">Введение</button>
-        <button class="section-button">Основная часть</button>
-        <button class="section-button">Заключение</button>
-        <button class="section-button">Список используемых источников</button>
-        <button class="section-button">Приложения</button>
+        <div class="section-item">
+            <button id="titlePageButton" class="section-button">Титульный лист</button>
+            <span class="{% if document.title_page.type_of_work %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.title_page.type_of_work %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="tableOfContentsButton" class="section-button">Оглавление</button>
+            <span class="{% if document.table_of_contents %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.table_of_contents %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="abbreviationsButton" class="section-button">Список сокращений</button>
+            <span class="{% if document.abbreviations %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.abbreviations %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="introductionButton" class="section-button">Введение</button>
+            <span class="{% if document.introduction %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.introduction %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="mainSectionButton" class="section-button">Основная часть</button>
+            <span class="{% if document.main_sections %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.main_sections %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="conclusionButton" class="section-button">Заключение</button>
+            <span class="{% if document.conclusion %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.conclusion %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="referencesButton" class="section-button">Список используемых источников</button>
+            <span class="{% if document.references %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.references %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
+        <div class="section-item">
+            <button id="appendicesButton" class="section-button">Приложения</button>
+            <span class="{% if document.appendices %}status-filled{% else %}status-empty{% endif %}">
+                {% if document.appendices %}Заполнено{% else %}Не заполнено{% endif %}
+            </span>
+        </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', path='js/create_document.js') }}" defer></script>
 {% endblock %}
