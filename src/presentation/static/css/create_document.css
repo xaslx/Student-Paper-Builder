@@ -1,13 +1,13 @@
 .button-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     margin-top: 20px;
 }
 
 .section-button {
-    width: 30%;
-    padding: 15px;
+    width: 350px;
+    padding: 10px;
     background-color: #6200ea;
     color: white;
     border: none;
@@ -15,70 +15,212 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    text-align: left;
+    text-align: center;
+    text-overflow: ellipsis;
 }
 
 .section-button:hover {
     background-color: #3700b3;
 }
 
-/* status */
-.section-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+.form-container {
+    width: 350px;
+    max-width: 350px;
+    display: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
-
-.section-button {
-    margin-right: 10px;
+details[open] .form-container {
+    display: block;
+    opacity: 1;
 }
 
 .status-filled {
     color: green;
+    font-size: 16px;
     font-weight: bold;
 }
 
 .status-empty {
     color: red;
+    font-size: 16px;
     font-weight: bold;
 }
 
+.section-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
 
-
-.custom-modal .swal2-input {
+.create_document {
     width: 100%;
-    padding: 8px 12px;
-    font-size: 14px;
-    margin: 10px auto;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-
-.custom-modal {
-    font-size: 14px;
-}
-
-
-
-.custom-intro-modal,
-.custom-conclusion-modal {
-    width: 600px !important;
-    max-width: 90% !important;
-    margin: 0 auto !important;
-    font-size: 16px;
-}
-
-.custom-intro-modal textarea.swal2-textarea,
-.custom-conclusion-modal textarea.swal2-textarea {
-    width: calc(100% - 20px) !important;
-    height: 250px !important;
-    resize: none;
     padding: 10px;
-    font-size: 16px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.create_document:focus,
+.create_document:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.6);
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+button[type="submit"]:hover {
+    background-color: #3700b3;
+}
+
+details summary {
+    list-style: none;
+}
+
+details[open] summary::before {
+    content: '';
+}
+
+details summary::before {
+    content: none;
+}
+
+
+#titlePageForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+#titlePageForm label {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+
+#titlePageForm input[type="text"],
+#titlePageForm input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.9rem;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 10px auto;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 0;
+}
+
+#titlePageForm input[type="text"]:focus,
+#titlePageForm input[type="number"]:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.3);
+}
+
+
+#titlePageForm button[type="submit"] {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+
+#titlePageForm button[type="submit"]:hover {
+    background-color: #3700b3;
+}
+
+
+#introductionForm textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    resize: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 5px;
+    box-sizing: border-box;
+    height: 300px;
+}
+
+
+#introductionForm textarea:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.3);
+}
+
+
+#introductionForm label {
     display: block;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+
+#conclusionForm textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    resize: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 5px;
+    box-sizing: border-box;
+    height: 300px;
+}
+
+
+#conclusionForm textarea:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.3);
+}
+
+
+#conclusionForm label {
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
