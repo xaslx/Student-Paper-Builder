@@ -5,7 +5,7 @@ from src.domain.document.value_object import Section
 
 
 def document_to_mongo(document: Document) -> dict:
-
+    print(document)
     return {
         'uuid': document.uuid,
         'user_uuid': document.user_uuid,

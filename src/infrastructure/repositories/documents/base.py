@@ -28,3 +28,7 @@ class BaseDocumentsRepository(ABC):
     @abstractmethod
     async def delete_all_documents_by_user_uuid(self, user_uuid: str) -> bool:
         ...
+        
+    @abstractmethod
+    async def update_document(self, document_uuid: str, document: Document) -> bool:
+        ...

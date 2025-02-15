@@ -45,3 +45,16 @@ class MongoDBDocumentRepository(BaseDocumentsRepository, BaseMongoDBRepository):
         result = await self._collection.delete_many({'user_uuid': user_uuid})
         return result.deleted_count > 0
     
+    async def update_document(self, document_uuid: str, document: Document) -> bool:
+
+        updated_document_data = document_to_mongo(document=document)
+        
+
+        updated_document_data.pop('uuid', None)
+
+        result = await self._collection.update_one(
+            {'uuid': document_uuid},
+            {'$set': updated_document_data}
+        )
+
+        return result.modified_count > 0
