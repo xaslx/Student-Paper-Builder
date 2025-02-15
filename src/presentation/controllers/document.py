@@ -1,14 +1,18 @@
-from fastapi import APIRouter, status, Request
-from dishka.integrations.fastapi import inject, FromDishka as Depends
-from src.application.use_cases.documents.get_document import GetDocumentUseCase
-from src.application.use_cases.documents.delete import DeleteAllDocumentsUseCase, DeleteDocumentUseCase
-from src.application.use_cases.documents.create import CreateDocumentUseCase
-from src.domain.user.entity import User
-from src.domain.document.entity import Document
-from src.presentation.schemas.document import CreateDocument
-from src.domain.user.exception import UserNotAuthenticatedException
-from fastapi.responses import HTMLResponse
+from dishka.integrations.fastapi import FromDishka as Depends
+from dishka.integrations.fastapi import inject
+from fastapi import APIRouter, Request, status
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+
+from src.application.use_cases.documents.create import CreateDocumentUseCase
+from src.application.use_cases.documents.delete import (
+    DeleteAllDocumentsUseCase, DeleteDocumentUseCase)
+from src.application.use_cases.documents.get_document import GetDocumentUseCase
+from src.application.use_cases.documents.update import UpdateDocumentUseCase
+from src.domain.document.entity import Document
+from src.domain.user.entity import User
+from src.domain.user.exception import UserNotAuthenticatedException
+from src.presentation.schemas.document import CreateDocument, UpdateDocument
 
 
 router: APIRouter = APIRouter(prefix='/documents', tags=['Документы'])
@@ -57,13 +61,13 @@ async def delete_document(
     document_uuid: str,
     user: Depends[User],
     use_case: Depends[DeleteDocumentUseCase],
-    
-) -> None:
+) -> JSONResponse:
     
     if not user:
         raise UserNotAuthenticatedException()
     
     await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
+    return JSONResponse(content={'detail': 'Документ удален'}, status_code=status.HTTP_200_OK)
 
 
 @router.delete(
@@ -75,12 +79,13 @@ async def delete_document(
 async def delete_all_documents(
     user: Depends[User],
     use_case: Depends[DeleteAllDocumentsUseCase],
-) -> None:
+) -> JSONResponse:
     
     if not user:
         raise UserNotAuthenticatedException()
     
     await use_case.execute(user_uuid=user.uuid)
+    return JSONResponse(content={'detail': 'Все документы удалены'}, status_code=status.HTTP_200_OK)
 
 
 @router.post(
@@ -99,3 +104,22 @@ async def add_document(
         raise UserNotAuthenticatedException()
     
     return await use_case.execute(document=new_document, user_uuid=user.uuid)
+
+
+@router.put(
+    '/{document_uuid}',
+    status_code=status.HTTP_200_OK,
+    description='Эндпоинт для обновления документа',
+)
+@inject
+async def update_document(
+    document_uuid: str,
+    document: UpdateDocument,
+    user: Depends[User],
+    use_case: Depends[UpdateDocumentUseCase],
+) -> JSONResponse:
+    
+    await use_case.execute(document_uuid=document_uuid, update_document=document, user_uuid=user.uuid)
+    return JSONResponse(content={'detail': 'Документ обновлен'}, status_code=status.HTTP_200_OK)
+
+    
