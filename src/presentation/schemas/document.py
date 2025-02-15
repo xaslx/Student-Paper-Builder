@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class TitlePage(BaseModel):
@@ -22,9 +23,14 @@ class Section(BaseModel):
 
 class CreateDocument(BaseModel):
     title_page: TitlePage
-    name: str = Field(min_length=5, max_length=30)
+    name: str = Field(min_length=5, max_length=30, default=None)
     introduction: str | None = Field(default=None)
     main_sections: list[Section] | None = Field(default=None)
     conclusion: str | None = Field(default=None)
     references: list[str] | None = Field(default=None)
     appendices: list[str] | None = Field(default=None)
+    
+
+class UpdateDocument(CreateDocument):
+    title_page: TitlePage | None = Field(default=None)
+    updated_at: datetime = Field(default_factory=datetime.now)
