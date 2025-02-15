@@ -77,7 +77,7 @@ details[open] .form-container {
     box-shadow: 0 0 5px rgba(98, 0, 234, 0.6);
 }
 
-button[type="submit"] {
+.create_document_btn[type="submit"] {
     width: 100%;
     padding: 10px;
     background-color: #6200ea;
@@ -90,7 +90,7 @@ button[type="submit"] {
     margin-top: 15px;
 }
 
-button[type="submit"]:hover {
+.create_document_btn[type="submit"]:hover {
     background-color: #3700b3;
 }
 

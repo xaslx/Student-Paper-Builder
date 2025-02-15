@@ -70,7 +70,7 @@
                                value="{{ document.title_page.teaching_position if document.title_page.teaching_position else '' }}" required>
                     
              
-                        <button type="submit">Сохранить</button>
+                        <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
             </details>
@@ -118,7 +118,7 @@
                                   rows="10" required>{{ document.introduction if document.introduction else '' }}</textarea>
                         
                
-                        <button type="submit">Сохранить</button>
+                        <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
             </details>
@@ -152,7 +152,7 @@
                                 required>{{ document.conclusion if document.conclusion and document.conclusion else '' }}</textarea>
                         
              
-                        <button type="submit">Сохранить</button>
+                        <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
             </details>
