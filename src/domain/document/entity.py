@@ -1,5 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields, replace, asdict
 
+from src.presentation.schemas.document import UpdateDocument
 from src.domain.common.entity import BaseEntity
 from src.domain.document.value_object import Section, TitlePage
 
@@ -14,3 +15,20 @@ class Document(BaseEntity):
     conclusion: str
     references: list[str]
     appendices: list[str] | None = field(default=None)
+
+
+    def update(self, new_data: UpdateDocument):
+        
+        updated_title_page = replace(self.title_page, **{
+            k: v for k, v in new_data.title_page.model_dump().items() if v is not None
+        }) if new_data.title_page else self.title_page
+
+
+        self.name = new_data.name or self.name
+        self.introduction = new_data.introduction or self.introduction
+        self.main_sections = new_data.main_sections or self.main_sections
+        self.conclusion = new_data.conclusion or self.conclusion
+        self.references = new_data.references or self.references
+        self.appendices = new_data.appendices or self.appendices
+        self.title_page = updated_title_page
+        self.updated_at = new_data.updated_at
