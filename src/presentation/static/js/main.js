@@ -6,6 +6,12 @@ document.getElementById("newDocumentButton").addEventListener("click", async () 
             text: "Вы не авторизованы!",
             icon: "error",
             confirmButtonText: "ОК",
+            showCloseButton: true,
+            allowOutsideClick: true,
+        }).then((result) => {
+            if (result.isConfirmed || result.dismiss === Swal.DismissReason.close || result.dismiss === Swal.DismissReason.backdrop) {
+                window.location.href = "/login";
+            }
         });
         return;
     }

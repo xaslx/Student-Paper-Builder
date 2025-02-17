@@ -35,7 +35,56 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
     
+    function checkRequiredSections() {
+        const requiredSections = [
+            'Титульный лист',
+            'Введение',
+            'Основная часть',
+            'Заключение',
+            'Список используемых источников'
+        ];
+
+        return requiredSections.every(sectionTitle => {
+            const sectionItem = Array.from(document.querySelectorAll('.section-item')).find(item => {
+                return item.querySelector('summary').textContent.trim() === sectionTitle;
+            });
+            
+            if (!sectionItem) return false;
+            const statusElement = sectionItem.querySelector('.status-wrapper span');
+            return statusElement.classList.contains('status-filled');
+        });
+    }
+
+    function handleSaveButtonClick(e) {
+        if (!checkRequiredSections()) {
+            e.preventDefault();
+            notie.alert({
+                type: 'error',
+                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
+            Титульный лист,
+            Введение,
+            Основная часть,
+            Заключение,
+            Список используемых источников`,
+                position: 'top-right',
+                time: 6
+            });
+        }
+    }
+
+
+    const saveDocxBtn = document.querySelector('.save-docx-btn');
+    const savePdfBtn = document.querySelector('.save-pdf-btn');
+    
+    if (saveDocxBtn) {
+        saveDocxBtn.addEventListener('click', handleSaveButtonClick);
+    }
+    
+    if (savePdfBtn) {
+        savePdfBtn.addEventListener('click', handleSaveButtonClick);
+    }
 
     const titlePageForm = document.getElementById('titlePageForm');
     if (titlePageForm) {
@@ -53,6 +102,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 city: document.getElementById('city').value,
                 teaching_position: document.getElementById('teaching_position').value,
             });
+        });
+    }
+
+    const abbreviationsForm = document.getElementById('abbreviationsForm');
+    if (abbreviationsForm) {
+        abbreviationsForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const abbreviationsText = document.getElementById('abbreviations_text').value;
+
+            updateDocument(documentUuid, 'abbreviations', abbreviationsText);
         });
     }
 

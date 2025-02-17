@@ -41,16 +41,28 @@ details[open] .form-container {
 }
 
 .status-filled {
-    color: green;
-    font-size: 16px;
-    font-weight: bold;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .status-empty {
-    color: red;
-    font-size: 16px;
-    font-weight: bold;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    margin-right: 10px;
 }
+
+.section-button {
+    display: flex;
+    align-items: center;
+}
+
 
 .section-item {
     display: flex;
@@ -220,6 +232,38 @@ details summary::before {
     display: block;
     text-align: center;
     font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+
+/* сокращения */
+#abbreviationsForm textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    resize: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 5px;
+    box-sizing: border-box;
+    height: 300px;
+}
+
+#abbreviationsForm textarea:focus {
+    border-color: #6200ea;
+    outline: none;
+    box-shadow: 0 0 5px rgba(98, 0, 234, 0.3);
+}
+
+#abbreviationsForm label {
+    display: block;
+    text-align: center;
+    font-size: 1rem;
     font-weight: bold;
     margin-bottom: 10px;
     text-transform: uppercase;

@@ -2,74 +2,65 @@
 
 {% block styles %}
 {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', path='css/create_document.css') }}">
+    <link rel="stylesheet" href="/static/css/create_document.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notie/dist/notie.min.css">
 {% endblock %}
 
 {% block content %}
     <h2>Конструктор документа <span style="color: black;">({{document.name}})</span></h2>
+    
     <div class="button-container">
         <input type="hidden" id="documentUuid" value="{{ document.uuid }}">
 
-        <span class="{% if document.title_page.type_of_work %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.title_page.type_of_work %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.title_page.type_of_work %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.title_page.type_of_work %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Титульный лист</summary>
                 <div class="form-container">
                     <form id="titlePageForm">
-            
                         <label for="type_of_work">Тип работы:</label>
                         <input type="text" id="type_of_work" name="type_of_work" class="create_document" placeholder="пример: Курсовая работа" 
                                value="{{ document.title_page.type_of_work if document.title_page.type_of_work else '' }}" required>
-                    
-               
+                        
                         <label for="discipline">Дисциплина:</label>
                         <input type="text" id="discipline" name="discipline" class="create_document" placeholder="пример: Программирование" 
                                value="{{ document.title_page.discipline if document.title_page.discipline else '' }}" required>
-                    
-           
+                        
                         <label for="subject">Тема:</label>
                         <input type="text" id="subject" name="subject" class="create_document" placeholder="пример: Разработка веб-приложений" 
                                value="{{ document.title_page.subject if document.title_page.subject else '' }}" required>
-                    
-                
+                        
                         <label for="educational_institution">Учебное заведение:</label>
                         <input type="text" id="educational_institution" name="educational_institution" class="create_document" placeholder="пример: МГУ" 
                                value="{{ document.title_page.educational_institution if document.title_page.educational_institution else '' }}" required>
-                    
-             
+                        
                         <label for="year">Год:</label>
                         <input type="number" id="year" name="year" class="create_document" placeholder="пример: 2023" 
                                value="{{ document.title_page.year if document.title_page.year else '' }}" required>
-              
-
+                        
                         <label for="student_fullname">ФИО студента:</label>
                         <input type="text" id="student_fullname" name="student_fullname" class="create_document" placeholder="пример: Иванов Иван Иванович" 
                                value="{{ document.title_page.student_fullname if document.title_page.student_fullname else '' }}" required>
-                    
-                
+                        
                         <label for="teacher_fullname">ФИО преподавателя:</label>
                         <input type="text" id="teacher_fullname" name="teacher_fullname" class="create_document" placeholder="пример: Петров Петр Петрович" 
                                value="{{ document.title_page.teacher_fullname if document.title_page.teacher_fullname else '' }}" required>
-                    
-                  
+                        
                         <label for="faculty">Факультет:</label>
                         <input type="text" id="faculty" name="faculty" class="create_document" placeholder="пример: Факультет вычислительной математики и кибернетики" 
                                value="{{ document.title_page.faculty if document.title_page.faculty else '' }}" required>
-                    
-                  
+                        
                         <label for="city">Город:</label>
                         <input type="text" id="city" name="city" class="create_document" placeholder="пример: Москва" 
                                value="{{ document.title_page.city if document.title_page.city else '' }}" required>
-                    
-                 
+                        
                         <label for="teaching_position">Должность преподавателя:</label>
                         <input type="text" id="teaching_position" name="teaching_position" class="create_document" placeholder="пример: Доцент" 
                                value="{{ document.title_page.teaching_position if document.title_page.teaching_position else '' }}" required>
-                    
-             
+                        
                         <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
@@ -77,118 +68,131 @@
         </div>
         
 
-        <span class="{% if document.table_of_contents %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.table_of_contents %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.table_of_contents %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.table_of_contents %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Оглавление</summary>
                 <div class="form-container">
-        
+
                 </div>
             </details>
-         
         </div>
-    
-  
-        <span class="{% if document.abbreviations %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.abbreviations %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
+        
+
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.abbreviations %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.abbreviations %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Список сокращений</summary>
                 <div class="form-container">
-          
+                    <form id="abbreviationsForm">
+                        <label for="abbreviations_text">Список сокращений</label>
+                        <textarea id="abbreviations_text" name="abbreviations_text" placeholder="Введите список сокращений..." 
+                                  rows="10" required>{{ document.abbreviations if document.abbreviations else '' }}</textarea>
+                        <button class="create_document_btn" type="submit">Сохранить</button>
+                    </form>
                 </div>
             </details>
         </div>
-    
+        
 
-        <span class="{% if document.introduction %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.introduction %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.introduction %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.introduction %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Введение</summary>
                 <div class="form-container">
                     <form id="introductionForm">
-              
                         <label for="introduction_text">Введение</label>
                         <textarea id="introduction_text" name="introduction_text" placeholder="Введите текст введения..." 
                                   rows="10" required>{{ document.introduction if document.introduction else '' }}</textarea>
-                        
-               
                         <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
             </details>
         </div>
-    
- 
-        <span class="{% if document.main_sections %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.main_sections %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
+
+
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.main_sections %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.main_sections %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Основная часть</summary>
                 <div class="form-container">
- 
+
                 </div>
             </details>
         </div>
-    
-  
-        <span class="{% if document.conclusion %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.conclusion %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
+
+
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.conclusion %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.conclusion %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Заключение</summary>
                 <div class="form-container">
                     <form id="conclusionForm">
-                 
                         <label for="conclusion_text">ЗАКЛЮЧЕНИЕ</label>
                         <textarea id="conclusion_text" name="conclusion_text" placeholder="Введите текст заключения..." 
-                                required>{{ document.conclusion if document.conclusion and document.conclusion else '' }}</textarea>
-                        
-             
+                                required>{{ document.conclusion if document.conclusion else '' }}</textarea>
                         <button class="create_document_btn" type="submit">Сохранить</button>
                     </form>
                 </div>
             </details>
         </div>
-    
 
-        <span class="{% if document.references %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.references %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
+
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.references %}status-filled{% else %}status-empty{% endif %}"
+                      title="{% if document.references %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Список используемых источников</summary>
                 <div class="form-container">
-             
+                    
                 </div>
             </details>
         </div>
-    
-   
-        <span class="{% if document.appendices %}status-filled{% else %}status-empty{% endif %}">
-            {% if document.appendices %}Заполнено{% else %}Не заполнено{% endif %}
-        </span>
+
         <div class="section-item">
+            <div class="status-wrapper">
+                <span class="{% if document.appendices %}status-filled{% else %}status-empty{% endif %}"
+                title="{% if document.appendices %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+            </div>
             <details>
                 <summary class="section-button">Приложения</summary>
                 <div class="form-container">
- 
+
                 </div>
             </details>
         </div>
+
+        <div class="save-buttons">
+            <button class="save-docx-btn">Сохранить в DOCX</button>
+            <button class="save-pdf-btn">Сохранить в PDF</button>
+        </div>
+
     </div>
+    
+
 {% endblock %}
+
 
 {% block scripts %}
     {{ super() }}
-    <script src="{{ url_for('static', path='js/create_document.js') }}" defer></script>
+    <script src="/static/js/create_document.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/notie/dist/notie.min.js"></script>
     <style>
         .notie-alert {
@@ -206,6 +210,27 @@
             animation: slideIn 0.5s ease-out;
         }
 
+        .save-buttons {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .save-buttons button {
+            background-color: #1f1f1f;
+            color: #f5f5f5;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 15%;
+            margin-left: 10px;
+
+        }
+
+        .save-buttons button:hover {
+            background-color: #eda64b;
+        }
+
         @keyframes slideIn {
         from {
             transform: translateX(100%);
@@ -219,11 +244,11 @@
         }
 
         .notie-alert-success {
-        font-size: 16px;
+            font-size: 16px;
         }
 
         .notie-alert-error {
-        font-size: 16px;
+            font-size: 16px;
         }
     </style>
 {% endblock %}
