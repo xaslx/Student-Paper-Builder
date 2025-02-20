@@ -24,7 +24,6 @@ class Document(BaseEntity):
             k: v for k, v in new_data.title_page.model_dump().items() if v is not None
         }) if new_data.title_page else self.title_page
 
-
         self.name = new_data.name or self.name
         self.introduction = new_data.introduction or self.introduction
         self.main_sections = new_data.main_sections or self.main_sections
@@ -33,4 +32,6 @@ class Document(BaseEntity):
         self.appendices = new_data.appendices or self.appendices
         self.title_page = updated_title_page or self.title_page
         self.updated_at = new_data.updated_at or self.updated_at
-        self.abbreviations = new_data.abbreviations or []
+        
+        if new_data.abbreviations is not None:
+            self.abbreviations = new_data.abbreviations
