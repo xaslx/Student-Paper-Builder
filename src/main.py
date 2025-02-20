@@ -1,11 +1,12 @@
 from dishka import AsyncContainer, make_async_container
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from dishka.integrations import fastapi as fastapi_integration
 from fastapi.staticfiles import StaticFiles
 from src.presentation.controllers.setup_routers import setup_controllers
 from src.infrastructure.ioc.ioc import AppProvider
 from src.settings.config import Config
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 
 @asynccontextmanager
@@ -22,8 +23,12 @@ def create_app() -> FastAPI:
     app: FastAPI = FastAPI(
         title='Student Paper Builder',
     )
-    app.mount('/src/presentation/static', StaticFiles(directory='src/presentation/static'), 'static')
+    app.mount("/static", StaticFiles(directory="src/presentation/static"), name="static")
     setup_controllers(app=app)
     fastapi_integration.setup_dishka(container=container, app=app)
+    
+    @app.exception_handler(404)
+    async def custom_404_handler(request: Request, __) -> HTMLResponse:
+        return RedirectResponse('/')
     
     return app
