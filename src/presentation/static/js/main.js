@@ -21,7 +21,7 @@ document.getElementById("newDocumentButton").addEventListener("click", async () 
         title: "Создание нового документа",
         input: "text",
         inputLabel: "Введите название документа",
-        inputPlaceholder: "Например: Курсовая работа по программированию",
+        inputPlaceholder: "Пример: Курсовая работа по программированию",
         showCancelButton: true,
         confirmButtonText: "Создать",
         cancelButtonText: "Отмена",
@@ -29,9 +29,12 @@ document.getElementById("newDocumentButton").addEventListener("click", async () 
             if (!value) {
                 return "Название документа обязательно!";
             }
-            if (value.length < 5 || value.length > 30) {
-                return "Название должно быть от 5 до 30 символов!";
+            if (value.length < 5 || value.length > 50) {
+                return "Название должно быть от 5 до 50 символов!";
             }
+        },
+        customClass: {
+            input: 'custom-input-class',
         },
     });
 

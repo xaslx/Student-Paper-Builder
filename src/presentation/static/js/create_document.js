@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
     style.innerHTML = `
         .swal-input-custom {
             height: 35px !important;
-            width: 89% !important;
+            width: 87% !important;
             font-size: 16px !important;
         }
     `;

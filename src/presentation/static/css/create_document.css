@@ -243,14 +243,6 @@ details summary::before {
     font-size: 14px;
 }
 
-
-.custom-swal-input {
-    width: 100% !important;
-    height: 30px !important;
-    font-size: 14px !important;
-    padding: 5px 10px !important;
-}
-
 .custom-swal-confirm-btn {
     font-size: 14px !important;
     padding: 5px 15px !important;
