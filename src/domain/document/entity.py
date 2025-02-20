@@ -10,6 +10,7 @@ class Document(BaseEntity):
     user_uuid: str
     name: str
     title_page: TitlePage
+    abbreviations: list[str]
     introduction: str
     main_sections: list[Section]
     conclusion: str
@@ -30,5 +31,6 @@ class Document(BaseEntity):
         self.conclusion = new_data.conclusion or self.conclusion
         self.references = new_data.references or self.references
         self.appendices = new_data.appendices or self.appendices
-        self.title_page = updated_title_page
-        self.updated_at = new_data.updated_at
+        self.title_page = updated_title_page or self.title_page
+        self.updated_at = new_data.updated_at or self.updated_at
+        self.abbreviations = new_data.abbreviations or []

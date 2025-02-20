@@ -29,6 +29,7 @@ class CreateDocumentUseCase:
             user_uuid=user_uuid,
             name=document.name,
             title_page=title_page,
+            abbreviations=document.abbreviations,
             introduction=document.introduction,
             main_sections=document.main_sections,
             conclusion=document.conclusion,
