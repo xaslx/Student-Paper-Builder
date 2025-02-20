@@ -90,15 +90,22 @@
             <details>
                 <summary class="section-button">Список сокращений</summary>
                 <div class="form-container">
-                    <form id="abbreviationsForm">
-                        <label for="abbreviations_text">Список сокращений</label>
-                        <textarea id="abbreviations_text" name="abbreviations_text" placeholder="Введите список сокращений..." 
-                                  rows="10" required>{{ document.abbreviations if document.abbreviations else '' }}</textarea>
-                        <button class="create_document_btn" type="submit">Сохранить</button>
-                    </form>
+                    <ul id="abbreviations-list" class="no-style-list">
+                        {% if document.abbreviations %}
+                            {% for abbr in document.abbreviations %}
+                                <li>
+                                    <span class="abbr-text">{{ abbr }}</span>
+                                    <button type="button" class="delete-abbreviation-btn">&times;</button>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                    <button id="add-abbreviation-btn" type="button" class="btn btn-add">Добавить</button>
                 </div>
             </details>
         </div>
+        
+        
         
 
         <div class="section-item">
@@ -211,7 +218,7 @@
         }
 
         .save-buttons {
-            margin-top: 20px;
+            margin-top: 5px;
             text-align: left;
         }
 

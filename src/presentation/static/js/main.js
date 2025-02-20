@@ -55,6 +55,7 @@ document.getElementById("newDocumentButton").addEventListener("click", async () 
                 introduction: null,
                 main_sections: [],
                 conclusion: null,
+                abbreviations: [],
                 references: [],
                 appendices: [],
             };
