@@ -2,6 +2,8 @@ from datetime import datetime
 from src.domain.document.entity import Document
 from src.domain.document.value_object import TitlePage
 from src.domain.document.value_object import Section
+import pytz
+from src.const import MOSCOW_TZ
 
 
 def document_to_mongo(document: Document) -> dict:
@@ -24,6 +26,14 @@ def document_to_mongo(document: Document) -> dict:
 
 def document_from_mongo(data: dict) -> Document:
     
+    created_at = data.get('created_at')
+    updated_at = data.get('updated_at')
+    
+    if created_at and isinstance(created_at, datetime):
+        created_at = created_at.replace(tzinfo=pytz.utc).astimezone(MOSCOW_TZ)
+    if updated_at and isinstance(updated_at, datetime):
+        updated_at = updated_at.replace(tzinfo=pytz.utc).astimezone(MOSCOW_TZ)
+    
     return Document(
         uuid=data.get('uuid'),
         name=data.get('name'),
@@ -35,8 +45,8 @@ def document_from_mongo(data: dict) -> Document:
         conclusion=data.get('conclusion'),
         references=data.get('references'),
         appendices=data.get('appendices', []),
-        created_at=data.get('created_at'),
-        updated_at=data.get('updated_at')
+        created_at=created_at,
+        updated_at=updated_at
     )
 
 
@@ -60,9 +70,7 @@ def section_from_mongo(data: dict) -> Section:
     )
 
 
-
 def title_page_to_mongo(title_page: TitlePage) -> dict:
-
 
     return {
         'type_of_work': title_page.type_of_work,

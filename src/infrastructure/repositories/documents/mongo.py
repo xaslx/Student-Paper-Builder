@@ -35,7 +35,8 @@ class MongoDBDocumentRepository(BaseDocumentsRepository, BaseMongoDBRepository):
     async def get_all_documents_by_user_uuid(self, user_uuid) -> list[Document] | None:
         documents_cursor = self._collection.find({'user_uuid': user_uuid}).sort('created_at', -1)
         documents = await documents_cursor.to_list(None)
-        return documents
+        
+        return [document_from_mongo(data=doc) for doc in documents]
         
     async def delete_document_by_uuid(self, document_uuid: str) -> bool:
         result = await self._collection.delete_one({'uuid': document_uuid})
