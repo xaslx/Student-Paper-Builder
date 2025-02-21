@@ -42,11 +42,11 @@
                                value="{{ document.title_page.year if document.title_page.year else '' }}" required>
                         
                         <label for="student_fullname">ФИО студента:</label>
-                        <input type="text" id="student_fullname" name="student_fullname" class="create_document" placeholder="пример: Иванов Иван Иванович" 
+                        <input type="text" id="student_fullname" name="student_fullname" class="create_document" placeholder="пример: Иванов А.Ю" 
                                value="{{ document.title_page.student_fullname if document.title_page.student_fullname else '' }}" required>
                         
                         <label for="teacher_fullname">ФИО преподавателя:</label>
-                        <input type="text" id="teacher_fullname" name="teacher_fullname" class="create_document" placeholder="пример: Петров Петр Петрович" 
+                        <input type="text" id="teacher_fullname" name="teacher_fullname" class="create_document" placeholder="пример: Петров А.Б" 
                                value="{{ document.title_page.teacher_fullname if document.title_page.teacher_fullname else '' }}" required>
                         
                         <label for="faculty">Факультет:</label>
@@ -168,10 +168,45 @@
             <details>
                 <summary class="section-button">Список используемых источников</summary>
                 <div class="form-container">
-                    
+                    <ol class="reference-list">
+                        {% for reference in document.references %}
+                            <li>
+                                <span class="reference-text">{{ reference }}</span>
+                                <button type="button" class="delete-abbreviation-btn">&times;</button>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    <button class="btn btn-add" id="add-internet-resource" type="button">Добавить интернет ресурс</button>
                 </div>
             </details>
         </div>
+        
+        <div id="custom-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Добавить интернет ресурс</h2>
+                <form id="resource-form">
+                    <div class="form-group">
+                        <label for="title">Заголовок статьи или страницы</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="site-name">Название сайта</label>
+                        <input type="text" id="site-name" name="site-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="link">Ссылка на статью</label>
+                        <input type="url" id="link" name="link" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="access-date">Дата обращения на сайт</label>
+                        <input type="date" id="access-date" name="access-date" required>
+                    </div>
+                    <button type="submit" class="btn-save">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        
 
         <div class="section-item">
             <div class="status-wrapper">

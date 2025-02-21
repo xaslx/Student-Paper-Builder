@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'success',
                 text: 'Документ успешно сохранен!',
                 position: 'top-right',
-                time: 3
+                time: 2
             });
 
         } catch (error) {
@@ -139,25 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const abbreviationsList = document.getElementById('abbreviations-list');
     const addAbbrBtn = document.getElementById('add-abbreviation-btn');
 
-    async function updateDocument(documentUuid, section, data) {
-        try {
-            const response = await fetch(`/documents/${documentUuid}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ [section]: data }),
-            });
 
-            if (!response.ok) throw new Error('Ошибка при сохранении');
-
-            const result = await response.json();
-            notie.alert({ type: 'success', text: 'Документ успешно сохранен!', position: 'top-right', time: 3 });
-        } catch (error) {
-            console.error('Ошибка:', error);
-            notie.alert({ type: 'error', text: 'Ошибка при сохранении документа.', position: 'top-right', time: 3 });
-        }
-    }
 
     function deleteAbbreviation(event) {
         if (!event.target.classList.contains('delete-abbreviation-btn')) return;
@@ -228,7 +210,96 @@ document.addEventListener('DOMContentLoaded', function () {
     abbreviationsList.addEventListener('click', deleteAbbreviation);
     addAbbrBtn.addEventListener('click', addAbbreviation);
 
+
+
+    document.querySelectorAll('.delete-abbreviation-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const li = this.closest('li');
+            if (!li) return;
+
+            const referenceText = li.querySelector('.reference-text').textContent.trim();
+
+            Swal.fire({
+                title: 'Удалить источник?',
+                text: `Вы уверены, что хотите удалить "${referenceText}"?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    li.remove();
+                    updateReferencesOnServer();
+                }
+            });
+        });
+    });
+
+    function updateReferencesOnServer() {
+        const references = Array.from(document.querySelectorAll('.reference-text')).map(span => span.textContent);
+        updateDocument(documentUuid, 'references', references);
+    }
+
     
+    const modal = document.getElementById('custom-modal');
+    const openModalBtn = document.getElementById('add-internet-resource');
+    const closeModalBtn = document.querySelector('.close');
+    const resourceForm = document.getElementById('resource-form');
+
+
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', function () {
+            modal.style.display = 'block';
+        });
+    }
+
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    }
+
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+
+    if (resourceForm) {
+        resourceForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const siteName = document.getElementById('site-name').value;
+            const link = document.getElementById('link').value;
+            const accessDate = document.getElementById('access-date').value;
+    
+            const formattedDate = new Date(accessDate).toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+    
+
+            const referenceText = `${title} // ${siteName} URL: ${link} (дата обращения: ${formattedDate}).`;
+
+            const referenceList = document.querySelector('.reference-list');
+            const newLi = document.createElement('li');
+            newLi.innerHTML = `<span class="reference-text">${referenceText}</span>
+                               <button type="button" class="delete-abbreviation-btn">&times;</button>`;
+            referenceList.appendChild(newLi);
+    
+            resourceForm.reset();
+    
+            modal.style.display = 'none';
+    
+            updateReferencesOnServer();
+        });
+    }
+
 });
 
 
