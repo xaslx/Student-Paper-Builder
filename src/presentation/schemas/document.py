@@ -18,7 +18,7 @@ class TitlePage(BaseModel):
 class Section(BaseModel):
     title: str | None = Field(default=None)
     content: str | None = Field(default=None)
-    subsections: list['Section'] | None = Field(default=None)
+    subsection: str | None = Field(default=None)
 
 
 class CreateDocument(BaseModel):
