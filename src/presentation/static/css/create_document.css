@@ -399,3 +399,14 @@ details summary::before {
     margin-top: 5px;
     font-style: italic;
 }
+
+.document-dates {
+    color: #666; /* Темно-серый цвет */
+    font-size: 14px; /* Размер текста */
+    margin-top: 5px; /* Отступ сверху */
+}
+
+.document-dates span {
+    display: block; /* Каждая дата на новой строке */
+    margin-bottom: 3px; /* Отступ между датами */
+}

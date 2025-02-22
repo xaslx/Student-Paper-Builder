@@ -8,7 +8,17 @@
 
 {% block content %}
     <h2>Конструктор документа <span style="color: black;">({{document.name}})</span></h2>
-    
+    <div class="document-dates">
+        <span class="date-created">Создан: {{ document.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+        <span class="date-updated">
+            Обновлён: 
+            {% if document.updated_at %}
+                {{ document.updated_at.strftime('%d.%m.%Y %H:%M') }}
+            {% else %}
+                Еще не обновлялся
+            {% endif %}
+        </span>
+    </div>
     <div class="button-container">
         <input type="hidden" id="documentUuid" value="{{ document.uuid }}">
 
