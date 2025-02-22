@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    document.querySelectorAll('.delete-abbreviation-btn').forEach(button => {
+    document.querySelectorAll('.delete-reference-btn').forEach(button => {
         button.addEventListener('click', function () {
             const li = this.closest('li');
             if (!li) return;

@@ -291,6 +291,23 @@ details summary::before {
     padding: 0 5px;
 }
 
+.li-reference {
+    position: relative;
+    padding-right: 30px;
+}
+
+.delete-reference-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #ff0000;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+}
 
 /* список источников */
 .reference-list {
@@ -305,18 +322,6 @@ details summary::before {
     padding-right: 30px;
 }
 
-
-
-.delete-abbreviation-btn {
-    background: transparent;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-}
 
 
 /* модальное окно*/

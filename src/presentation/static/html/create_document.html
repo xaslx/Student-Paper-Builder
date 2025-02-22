@@ -170,9 +170,9 @@
                 <div class="form-container">
                     <ol class="reference-list">
                         {% for reference in document.references %}
-                            <li>
+                            <li class="li-reference">
                                 <span class="reference-text">{{ reference }}</span>
-                                <button type="button" class="delete-abbreviation-btn">&times;</button>
+                                <button type="button" class="delete-reference-btn">&times;</button>
                             </li>
                         {% endfor %}
                     </ol>
@@ -188,15 +188,15 @@
                 <form id="resource-form">
                     <div class="form-group">
                         <label for="title">Заголовок статьи или страницы</label>
-                        <input type="text" id="title" name="title" required>
+                        <input placeholder="Пример: Пять мини-ПК, на которые стоит обратить внимание в 2025 году: интересные новинки февраля" type="text" id="title" name="title" required>
                     </div>
                     <div class="form-group">
                         <label for="site-name">Название сайта</label>
-                        <input type="text" id="site-name" name="site-name" required>
+                        <input placeholder="Пример: Хабр" type="text" id="site-name" name="site-name" required>
                     </div>
                     <div class="form-group">
-                        <label for="link">Ссылка на статью</label>
-                        <input type="url" id="link" name="link" required>
+                        <label for="link">Ссылка на страницу</label>
+                        <input placeholder="Пример: https://habr.com/ru/companies/selectel/articles/884724/" type="url" id="link" name="link" required>
                     </div>
                     <div class="form-group">
                         <label for="access-date">Дата обращения на сайт</label>
