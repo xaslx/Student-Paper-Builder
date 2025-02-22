@@ -145,11 +145,54 @@
             <details>
                 <summary class="section-button">Основная часть</summary>
                 <div class="form-container">
-
+                    <div id="chapters-list">
+                        {% if document.main_sections %}
+                            {% for chapter in document.main_sections %}
+                                <div class="chapter-item" data-index="{{ loop.index0 }}">
+                                    <h3>{{ chapter.title }}</h3>
+                                    {% if chapter.subsection %}
+                                        <h4>{{ chapter.subsection }}</h4>
+                                    {% endif %}
+                                    <p>{{ chapter.content }}</p>
+                                    <div class="chapter-actions">
+                                        <button style="font-size: 20px; color: black;" class="edit-chapter-btn" data-index="{{ loop.index0 }}">
+                                            &#9998;
+                                        </button>
+                                        <button style="font-size: 20px; color: red;" class="delete-chapter-btn" data-index="{{ loop.index0 }}">
+                                            &times;
+                                        </button>                                        
+                                    </div>
+                                </div>
+                        {% endfor %}
+                        
+                        {% endif %}
+                    </div>
+                    <button id="add-chapter-btn" type="button" class="btn btn-add">Добавить главу</button>
                 </div>
             </details>
         </div>
-
+        
+        <div id="chapter-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="modal-title">Добавить главу</h2>
+                <form id="chapter-form">
+                    <div class="form-group">
+                        <label for="chapter-title">Название главы</label>
+                        <input type="text" id="chapter-title" name="chapter-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subchapter-title">Название подглавы (необязательно)</label>
+                        <input type="text" id="subchapter-title" name="subchapter-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="chapter-content">Текст главы</label>
+                        <textarea class="chapter-content" id="chapter-content" name="chapter-content" rows="10" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-save">Сохранить</button>
+                </form>
+            </div>
+        </div>
 
         <div class="section-item">
             <div class="status-wrapper">

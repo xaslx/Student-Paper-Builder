@@ -349,8 +349,160 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updateReferencesOnServer();
         });
+    
+
+    const addChapterBtn = document.getElementById('add-chapter-btn');
+    const chapterModal = document.getElementById('chapter-modal');
+    const chapterForm = document.getElementById('chapter-form');
+    const chaptersList = document.getElementById('chapters-list');
+
+    if (addChapterBtn) {
+        addChapterBtn.addEventListener('click', function () {
+            chapterModal.style.display = 'block';
+            chapterForm.reset();
+            document.getElementById('modal-title').textContent = 'Добавить главу';
+            chapterForm.dataset.mode = 'add';
+        });
     }
 
+    const closeModalBtn = chapterModal.querySelector('.close');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function () {
+            chapterModal.style.display = 'none';
+        });
+    }
+
+    if (chapterForm) {
+        chapterForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+        
+            const chapterTitle = document.getElementById('chapter-title').value;
+            const subchapterTitle = document.getElementById('subchapter-title').value;
+            const chapterContent = document.getElementById('chapter-content').value;
+        
+            const chapterData = {
+                title: chapterTitle,
+                content: chapterContent,
+                subsection: subchapterTitle || null
+            };
+        
+            if (chapterForm.dataset.mode === 'add') {
+                addChapterToDOM(chapterData);
+            } else if (chapterForm.dataset.mode === 'edit') {
+                const chapterIndex = chapterForm.dataset.chapterIndex;
+                updateChapterInDOM(chapterIndex, chapterData);
+            }
+        
+            updateDocument(documentUuid, 'main_sections', getChaptersData());
+            chapterModal.style.display = 'none';
+    });
+    }
+
+    function addChapterToDOM(chapterData) {
+        const chapterItem = document.createElement('div');
+        chapterItem.classList.add('chapter-item');
+        chapterItem.dataset.index = Date.now();
+    
+        chapterItem.innerHTML = `
+            <h3>${chapterData.title}</h3>
+            ${chapterData.subsection ? `<h4>${chapterData.subsection}</h4>` : ''}
+            <p>${chapterData.content}</p>
+            <div class="chapter-actions">
+                <button style="font-size: 20px; color: black;" class="edit-chapter-btn" data-index="${chapterItem.dataset.index}">
+                    &#9998;
+                </button>
+                <button style="font-size: 20px; color: red;" class="delete-chapter-btn" data-index="${chapterItem.dataset.index}">
+                    &times;
+                </button>
+            </div>
+        `;
+    
+        chaptersList.appendChild(chapterItem);
+    }
+    
+
+    function updateChapterInDOM(chapterIndex, chapterData) {
+        const chapterItem = chaptersList.querySelector(`.chapter-item[data-index="${chapterIndex}"]`);
+        if (chapterItem) {
+            chapterItem.querySelector('h3').textContent = chapterData.title;
+            chapterItem.querySelector('p').textContent = chapterData.content;
+
+            const subchapterTitleElement = chapterItem.querySelector('h4');
+            if (chapterData.subsection) {
+                if (subchapterTitleElement) {
+                    subchapterTitleElement.textContent = chapterData.subsection;
+                } else {
+                    const h4 = document.createElement('h4');
+                    h4.textContent = chapterData.subsection;
+                    chapterItem.insertBefore(h4, chapterItem.querySelector('p'));
+                }
+            } else if (subchapterTitleElement) {
+                subchapterTitleElement.remove();
+            }
+        }
+    }
+
+    function getChaptersData() {
+        const chapters = [];
+        chaptersList.querySelectorAll('.chapter-item').forEach(chapterItem => {
+            const chapterData = {
+                title: chapterItem.querySelector('h3').textContent,
+                content: chapterItem.querySelector('p').textContent,
+                subsection: chapterItem.querySelector('h4')?.textContent || null
+            };
+
+            chapters.push(chapterData);
+        });
+
+        return chapters;
+    }
+
+    chaptersList.addEventListener('click', function (event) {
+        const editButton = event.target.closest('.edit-chapter-btn'); 
+        if (editButton) {
+            const chapterIndex = editButton.dataset.index;
+            const chapterItem = chaptersList.querySelector(`.chapter-item[data-index="${chapterIndex}"]`);
+
+            if (chapterItem) {
+                const chapterTitle = chapterItem.querySelector('h3').textContent;
+                const subchapterTitle = chapterItem.querySelector('h4')?.textContent || '';
+                const chapterContent = chapterItem.querySelector('p').textContent;
+
+                document.getElementById('chapter-title').value = chapterTitle;
+                document.getElementById('subchapter-title').value = subchapterTitle;
+                document.getElementById('chapter-content').value = chapterContent;
+
+                document.getElementById('modal-title').textContent = 'Редактировать главу';
+                chapterForm.dataset.mode = 'edit';
+                chapterForm.dataset.chapterIndex = chapterIndex;
+                chapterModal.style.display = 'block';
+            }
+        }
+    });
+
+    chaptersList.addEventListener('click', function (event) {
+        const deleteButton = event.target.closest('.delete-chapter-btn'); 
+        if (deleteButton) {
+            const chapterIndex = deleteButton.dataset.index;
+            const chapterItem = chaptersList.querySelector(`.chapter-item[data-index="${chapterIndex}"]`);
+            
+            if (chapterItem) {
+                Swal.fire({
+                    title: 'Удалить главу?',
+                    text: `Вы уверены, что хотите удалить главу "${chapterItem.querySelector('h3').textContent}"?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Удалить',
+                    cancelButtonText: 'Отмена',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        chapterItem.remove();
+                        updateDocument(documentUuid, 'main_sections', getChaptersData());
+                    }
+                });
+            }
+        }
+    })
+        }
+
 });
-
-
