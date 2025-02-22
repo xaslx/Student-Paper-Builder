@@ -27,4 +27,4 @@ class TitlePage:
 class Section:
     title: str
     content: str
-    subsections: list['Section'] | None = field(default=None)
+    subsection: str | None

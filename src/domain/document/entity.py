@@ -26,12 +26,16 @@ class Document(BaseEntity):
 
         self.name = new_data.name or self.name
         self.introduction = new_data.introduction or self.introduction
-        self.main_sections = new_data.main_sections or self.main_sections
         self.conclusion = new_data.conclusion or self.conclusion
-        self.references = new_data.references or self.references
         self.appendices = new_data.appendices or self.appendices
         self.title_page = updated_title_page or self.title_page
         self.updated_at = new_data.updated_at or self.updated_at
         
         if new_data.abbreviations is not None:
             self.abbreviations = new_data.abbreviations
+            
+        if new_data.references is not None:
+            self.references = new_data.references
+
+        if new_data.main_sections is not None:
+            self.main_sections = new_data.main_sections
