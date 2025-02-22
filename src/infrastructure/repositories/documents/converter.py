@@ -33,7 +33,7 @@ def document_from_mongo(data: dict) -> Document:
         created_at = created_at.replace(tzinfo=pytz.utc).astimezone(MOSCOW_TZ)
     if updated_at and isinstance(updated_at, datetime):
         updated_at = updated_at.replace(tzinfo=pytz.utc).astimezone(MOSCOW_TZ)
-    
+
     return Document(
         uuid=data.get('uuid'),
         name=data.get('name'),
@@ -55,18 +55,15 @@ def section_to_mongo(section: Section) -> dict:
     return {
         'title': section.title,
         'content': section.content,
-        'subsections': [section_to_mongo(sub) for sub in section.subsections]
+        'subsection': section.subsection
     }
-
 
 def section_from_mongo(data: dict) -> Section:
 
-    subsections = [section_from_mongo(sub) for sub in data.get('subsections', [])] if data.get('subsections') else []
-    
     return Section(
         title=data.get('title'),
         content=data.get('content'),
-        subsections=subsections
+        subsection=data.get('subsection')
     )
 
 
