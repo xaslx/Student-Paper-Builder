@@ -177,6 +177,7 @@
                         {% endfor %}
                     </ol>
                     <button class="btn btn-add" id="add-internet-resource" type="button">Добавить интернет ресурс</button>
+                    <button class="btn btn-add" id="add-book" type="button">Добавить книгу</button>
                 </div>
             </details>
         </div>
@@ -201,6 +202,45 @@
                     <div class="form-group">
                         <label for="access-date">Дата обращения на сайт</label>
                         <input type="date" id="access-date" name="access-date" required>
+                    </div>
+                    <button type="submit" class="btn-save">Сохранить</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="book-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Добавить книгу</h2>
+                <form id="book-form">
+                    <div class="form-group">
+                        <label for="authors">Фамилии и инициалы авторов</label>
+                        <input placeholder="Пример: Пушкин А.С" type="text" id="authors" name="authors" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-title">Название книги</label>
+                        <input placeholder="Пример: Капитанская дочка" type="text" id="book-title" name="book-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edition">Номер издания</label>
+                        <input placeholder="Пример: 2-е" type="text" id="edition" name="edition" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="publishing-city">Город издательства</label>
+                        <span class="example-text">Пример: М., СПб. – сокращённо с точкой, другие города - полностью без точки</span>
+                        <input type="text" id="publishing-city" name="publishing-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="publisher">Название издательства</label>
+                        <input placeholder="Пример: Триумф" type="text" id="publisher" name="publisher" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="publishing-year">Год издания</label>
+                        <input placeholder="Пример: 2025" type="number" id="publishing-year" name="publishing-year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pages">Количество страниц</label>
+                        <input placeholder="Пример: 400" type="number" id="pages" name="pages" required>
                     </div>
                     <button type="submit" class="btn-save">Сохранить</button>
                 </form>

@@ -300,6 +300,57 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const bookModal = document.getElementById('book-modal');
+    const openBookModalBtn = document.getElementById('add-book');
+    const closeBookModalBtn = bookModal.querySelector('.close');
+    const bookForm = document.getElementById('book-form');
+
+    if (openBookModalBtn) {
+        openBookModalBtn.addEventListener('click', function () {
+            bookModal.style.display = 'block';
+        });
+    }
+
+    if (closeBookModalBtn) {
+        closeBookModalBtn.addEventListener('click', function () {
+            bookModal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === bookModal) {
+            bookModal.style.display = 'none';
+        }
+    });
+
+
+    if (bookForm) {
+        bookForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const authors = document.getElementById('authors').value;
+            const bookTitle = document.getElementById('book-title').value;
+            const edition = document.getElementById('edition').value;
+            const city = document.getElementById('publishing-city').value;
+            const publisher = document.getElementById('publisher').value;
+            const year = document.getElementById('publishing-year').value;
+            const pages = document.getElementById('pages').value;
+
+            const referenceText = `${authors} ${bookTitle}. - ${edition} изд. - ${city}: ${publisher}, ${year}. - ${pages} с.`;
+
+            const referenceList = document.querySelector('.reference-list');
+            const newLi = document.createElement('li');
+            newLi.innerHTML = `<span class="reference-text">${referenceText}</span>
+                               <button type="button" class="delete-reference-btn">&times;</button>`;
+            referenceList.appendChild(newLi);
+
+            bookForm.reset();
+            bookModal.style.display = 'none';
+
+            updateReferencesOnServer();
+        });
+    }
+
 });
 
 

@@ -276,6 +276,8 @@ details summary::before {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 5px;
+    width: 80%;
 }
 
 .btn-add:hover {
@@ -388,4 +390,12 @@ details summary::before {
 
 .btn-save:hover {
     background-color: #3700b3;
+}
+
+.example-text {
+    color: #666;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+    font-style: italic;
 }
