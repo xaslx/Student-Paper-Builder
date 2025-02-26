@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import dataclass
 from src.application.services.document_creator import DocxCreator
 from src.domain.document.exception import DocumentNotFoundException
@@ -13,7 +14,7 @@ class DownloadDocument:
     document_repository: BaseDocumentsRepository
     document_creator: DocxCreator
     
-    async def execute(self, document_uuid: str, user_uuid: str) -> bool:
+    async def execute(self, document_uuid: str, user_uuid: str) -> str:
         
         document: Document | None = await self.document_repository.get_document_by_uuid(document_uuid=document_uuid)
         
@@ -33,6 +34,11 @@ class DownloadDocument:
         
         uniq_name: str = f'{document.uuid}'
         document_to_dict = document_to_mongo(document=document)
+
+        await asyncio.to_thread(
+            self.document_creator.fill_template_with_breaks,
+            context=document_to_dict,
+            output_path=uniq_name
+        )
         
-        self.document_creator.fill_template_with_breaks(context=document_to_dict, output_path=uniq_name)
-        return True
+        return uniq_name
