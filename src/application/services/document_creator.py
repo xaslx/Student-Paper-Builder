@@ -65,10 +65,10 @@ class DocxCreator:
 
         doc_tpl = DocxTemplate(self.template_path)
         doc_tpl.render(context=context)
-        doc_tpl.save(f'{output_path}.docx')
+        doc_tpl.save(f'src/presentation/static/docx/{output_path}.docx')
 
 
-        final_doc = Document(f'{output_path}.docx')
+        final_doc = Document(f'src/presentation/static/docx/{output_path}.docx')
         final_doc.sections[0].different_first_page_header_footer = True
 
 
@@ -77,8 +77,11 @@ class DocxCreator:
         year = title_page.get("year", "")
 
         self._add_footer(final_doc, city, year)
-        final_doc.save(f'{output_path}.docx')
-        self._convert_to_pdf(docx_path=f'{output_path}.docx', pdf_path=f'{output_path}.pdf')
+        final_doc.save(f'src/presentation/static/docx/{output_path}.docx')
+        self._convert_to_pdf(
+            docx_path=f'src/presentation/static/docx/{output_path}.docx',
+            pdf_path=f'src/presentation/static/pdf/{output_path}.pdf',
+        )
         
     def _convert_to_pdf(self, docx_path: str, pdf_path: str) -> None:
 
