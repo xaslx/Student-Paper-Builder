@@ -3,3 +3,5 @@ __pycache__
 .venv
 venv
 rabbitmq_data2
+pdf
+docx
