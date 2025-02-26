@@ -15,18 +15,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 throw new Error('Ошибка при сохранении');
             }
     
-            const result = await response.json();
-                        
-            notie.alert({
-                type: 'success',
-                text: 'Документ успешно сохранен!',
-                position: 'top-right',
-                time: 2
-            });
-
+            localStorage.setItem('documentUpdated', 'true');
+            localStorage.setItem('openSection', section);
+    
+            window.location.reload();
+    
         } catch (error) {
             console.error('Ошибка:', error);
-            
+    
             notie.alert({
                 type: 'error',
                 text: 'Ошибка при сохранении документа.',
@@ -36,6 +32,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    if (localStorage.getItem('documentUpdated') === 'true') {
+        notie.alert({
+            type: 'success',
+            text: 'Документ успешно сохранен!',
+            position: 'top-right',
+            time: 2
+        });
+
+        localStorage.removeItem('documentUpdated');
+    }
+
+    const openSection = localStorage.getItem('openSection');
+    if (openSection) {
+        const sectionElement = document.querySelector(`[data-section="${openSection}"]`);
+        if (sectionElement) {
+            sectionElement.open = true;
+        }
+        localStorage.removeItem('openSection');
+    }
     
     function checkRequiredSections() {
         const requiredSections = [
@@ -71,7 +86,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 position: 'top-right',
                 time: 6
             });
+            return false;
         }
+        return true;
     }
 
 
@@ -502,7 +519,101 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         }
-    })
-        }
+        })
+    
+    const saveDocxBtn = document.querySelector('.save-docx-btn');
+    const savePdfBtn = document.querySelector('.save-pdf-btn');
+    const documentUuid = document.getElementById('documentUuid').value;
 
+    saveDocxBtn.addEventListener('click', function() {
+        if (!checkRequiredSections()) {
+            notie.alert({
+                type: 'error',
+                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
+            Титульный лист,
+            Введение,
+            Основная часть,
+            Заключение,
+            Список используемых источников`,
+                position: 'top-right',
+                time: 6
+            });
+            return;
+        }
+    
+        disableButtonsForSeconds(2);
+        showDownloadMessage();
+        saveDocument('docx');
+    });
+    
+    savePdfBtn.addEventListener('click', function() {
+        if (!checkRequiredSections()) {
+            notie.alert({
+                type: 'error',
+                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
+            Титульный лист,
+            Введение,
+            Основная часть,
+            Заключение,
+            Список используемых источников`,
+                position: 'top-right',
+                time: 6
+            });
+            return;
+        }
+    
+        disableButtonsForSeconds(2);
+        showDownloadMessage();
+        saveDocument('pdf');
+    });
+
+    function disableButtonsForSeconds(seconds) {
+        saveDocxBtn.disabled = true;
+        savePdfBtn.disabled = true;
+
+        setTimeout(() => {
+            saveDocxBtn.disabled = false;
+            savePdfBtn.disabled = false;
+        }, seconds * 1000);
+    }
+
+    function showDownloadMessage() {
+        notie.alert({
+            type: 'info',
+            text: 'Загрузка скоро начнется...',
+            position: 'top',
+            time: 3,
+        });
+    }
+
+    function saveDocument(format) {
+        fetch(`/documents/${documentUuid}/download?format=${format}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            } else {
+                throw new Error('Ошибка при сохранении документа');
+            }
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${documentUuid}.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            notie.alert({ type: 'error', text: 'Ошибка при сохранении документа', position: 'top', time: 3 });
+        });
+    }
+    }
 });

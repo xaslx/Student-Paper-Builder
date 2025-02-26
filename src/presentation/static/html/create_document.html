@@ -27,7 +27,7 @@
                 <span class="{% if document.title_page.type_of_work %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.title_page.type_of_work %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="title_page">
                 <summary class="section-button">Титульный лист</summary>
                 <div class="form-container">
                     <form id="titlePageForm">
@@ -83,7 +83,7 @@
                 <span class="{% if document.table_of_contents %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.table_of_contents %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="content">
                 <summary class="section-button">Оглавление</summary>
                 <div class="form-container">
 
@@ -97,7 +97,7 @@
                 <span class="{% if document.abbreviations %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.abbreviations %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="abbreviations">
                 <summary class="section-button">Список сокращений</summary>
                 <div class="form-container">
                     <ul id="abbreviations-list" class="no-style-list">
@@ -123,7 +123,7 @@
                 <span class="{% if document.introduction %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.introduction %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="introduction">
                 <summary class="section-button">Введение</summary>
                 <div class="form-container">
                     <form id="introductionForm">
@@ -199,7 +199,7 @@
                 <span class="{% if document.conclusion %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.conclusion %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="conclusion">
                 <summary class="section-button">Заключение</summary>
                 <div class="form-container">
                     <form id="conclusionForm">
@@ -218,7 +218,7 @@
                 <span class="{% if document.references %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.references %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="references">
                 <summary class="section-button">Список используемых источников</summary>
                 <div class="form-container">
                     <ol class="reference-list">
@@ -306,7 +306,7 @@
                 <span class="{% if document.appendices %}status-filled{% else %}status-empty{% endif %}"
                 title="{% if document.appendices %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="appendices">
                 <summary class="section-button">Приложения</summary>
                 <div class="form-container">
 
@@ -345,12 +345,17 @@
             animation: slideIn 0.5s ease-out;
         }
 
-        .save-buttons {
-            margin-top: 5px;
-            text-align: left;
+
+        .save-docx-btn:disabled,
+        .save-pdf-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #ccc;
+            color: #666;
         }
 
-        .save-buttons button {
+        .save-docx-btn,
+        .save-pdf-btn {
             background-color: #1f1f1f;
             color: #f5f5f5;
             border: none;
@@ -359,10 +364,11 @@
             cursor: pointer;
             width: 15%;
             margin-left: 10px;
-
+            transition: opacity 0.3s ease, background-color 0.3s ease;
         }
 
-        .save-buttons button:hover {
+        .save-docx-btn:hover,
+        .save-pdf-btn:hover {
             background-color: #eda64b;
         }
 
