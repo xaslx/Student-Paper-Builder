@@ -3,6 +3,8 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from src.application.use_cases.documents.download import DownloadDocument
+from src.application.use_cases.documents.update import UpdateDocumentUseCase
 from src.application.use_cases.documents.get_document import GetDocumentUseCase
 from src.application.use_cases.documents.delete import DeleteAllDocumentsUseCase, DeleteDocumentUseCase
 from src.domain.document.entity import Document
@@ -19,7 +21,7 @@ from src.infrastructure.repositories.users.base import BaseUsersRepository
 from src.infrastructure.repositories.users.mongo import MongoDBUsersRepository
 from src.settings.config import Config
 from src.application.use_cases.documents.create import CreateDocumentUseCase
-
+from src.application.services.document_creator import DocxCreator
 
 
 class AppProvider(Provider):
@@ -78,6 +80,12 @@ class AppProvider(Provider):
             hash_service=hash_service,
             jwt_service=jwt_service,
         )
+        
+    @provide(scope=Scope.REQUEST)
+    def get_docx_creator_service(self) -> DocxCreator:
+        
+        return DocxCreator(template_path='src/presentation/static/templates/main.docx')
+        
 
     #UseCases
     @provide(scope=Scope.REQUEST)
@@ -161,6 +169,26 @@ class AppProvider(Provider):
         document_repository: BaseDocumentsRepository,
     ) -> GetDocumentUseCase:
         return GetDocumentUseCase(document_repository=document_repository)
+    
+    @provide(scope=Scope.REQUEST)
+    def get_update_document_use_case(
+        self,
+        document_repository: BaseDocumentsRepository,
+    ) -> UpdateDocumentUseCase:
+        return UpdateDocumentUseCase(document_repository=document_repository)
+    
+    @provide(scope=Scope.REQUEST)
+    def get_download_document_use_case(
+        self,
+        document_repository: BaseDocumentsRepository,
+        document_creator: DocxCreator,
+    ) -> DownloadDocument:
+        return DownloadDocument(document_repository=document_repository, document_creator=document_creator)
+        
+        
+    @provide(scope=Scope.REQUEST)
+    
+    
 
     #dependencies
     @provide(scope=Scope.REQUEST)

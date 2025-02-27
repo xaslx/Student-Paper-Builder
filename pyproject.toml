@@ -17,6 +17,9 @@ passlib = "^1.7.4"
 python-jose = "^3.3.0"
 aiormq = "^6.8.1"
 aiosmtplib = "^3.0.2"
+pytest = "^8.3.4"
+pytz = "^2025.1"
+pdfminer-six = "^20240706"
 
 
 [build-system]

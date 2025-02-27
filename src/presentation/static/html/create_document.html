@@ -59,7 +59,7 @@
                         <input type="text" id="teacher_fullname" name="teacher_fullname" class="create_document" placeholder="пример: Петров А.Б" 
                                value="{{ document.title_page.teacher_fullname if document.title_page.teacher_fullname else '' }}" required>
                         
-                        <label for="faculty">Факультет:</label>
+                        <label for="faculty">Кафедра:</label>
                         <input type="text" id="faculty" name="faculty" class="create_document" placeholder="пример: Факультет вычислительной математики и кибернетики" 
                                value="{{ document.title_page.faculty if document.title_page.faculty else '' }}" required>
                         
@@ -142,7 +142,7 @@
                 <span class="{% if document.main_sections %}status-filled{% else %}status-empty{% endif %}"
                       title="{% if document.main_sections %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
-            <details>
+            <details data-section="main_sections">
                 <summary class="section-button">Основная часть</summary>
                 <div class="form-container">
                     <div id="chapters-list">
