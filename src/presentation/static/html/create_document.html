@@ -317,6 +317,7 @@
         <div class="save-buttons">
             <button class="save-docx-btn">Сохранить в DOCX</button>
             <button class="save-pdf-btn">Сохранить в PDF</button>
+            <a href="{{ url_for('download:page', document_uuid=document.uuid) }}?format=pdf" target="_blank" class="full-width-btn">Просмотр файла в браузере</a>
         </div>
 
     </div>
