@@ -1,6 +1,6 @@
 from dishka.integrations.fastapi import FromDishka as Depends
 from dishka.integrations.fastapi import inject
-from fastapi import APIRouter, Request, status, Query, BackgroundTasks
+from fastapi import APIRouter, Request, status, Query
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from src.application.use_cases.documents.download import DownloadDocument
@@ -15,7 +15,6 @@ from src.domain.user.exception import UserNotAuthenticatedException
 from src.presentation.schemas.document import CreateDocument, UpdateDocument
 from typing import Annotated
 from fastapi.responses import FileResponse
-import threading
 
 
 router: APIRouter = APIRouter(prefix='/documents', tags=['Документы'])
@@ -58,6 +57,7 @@ async def get_document(
     '/{document_uuid}/download',
     status_code=status.HTTP_200_OK,
     description='Эндпоинт для скачивания документа',
+    name='download:page',
 )
 @inject
 async def download_document(
@@ -66,6 +66,7 @@ async def download_document(
     user: Depends[User],
     use_case: Depends[DownloadDocument],
 ) -> FileResponse:
+    
     if not user:
         raise UserNotAuthenticatedException()
     
@@ -77,7 +78,7 @@ async def download_document(
         if format == 'docx':
             return FileResponse(f'src/presentation/static/docx/{document_uuid}.docx')
     else:
-        return JSONResponse(content={'detail': 'Не удалось скачать файл'}, status_code=500)
+        return JSONResponse(content={'detail': 'Не удалось скачать файл'}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
 
