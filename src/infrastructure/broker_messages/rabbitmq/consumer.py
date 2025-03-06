@@ -6,27 +6,27 @@ from aiosmtplib import SMTP
 from src.settings.config import Config
 from email.message import EmailMessage
 import logging
+import smtplib
 
 config: Config = Config()
 logger = logging.getLogger(__name__)
 
 
 async def send_email(to: str, subject: str, body: str):
-    smtp_client = SMTP(hostname=config.smtp.smtp_host, port=config.smtp.smtp_port, use_tls=True)
-    await smtp_client.connect()
-    await smtp_client.login(config.smtp.smtp_user, config.smtp.smtp_pass)
-
 
     msg = EmailMessage()
     msg['From'] = config.smtp.smtp_user
     msg['To'] = to
     msg['Subject'] = subject
-    msg.set_content(body, charset='utf-8')
 
+    msg.set_content(body)
 
-    await smtp_client.send_message(msg)
-    await smtp_client.quit()
-    logger.info(f'Email отправлен на {to}')
+    with smtplib.SMTP_SSL(config.smtp.smtp_host, config.smtp.smtp_port) as server:
+        server.login(config.smtp.smtp_user, config.smtp.smtp_pass)
+        server.send_message(msg)
+        
+        logger.info(f'Email отправлен на {to}')
+
 
 async def on_message(message: DeliveredMessage):
     try:
