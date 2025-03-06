@@ -94,7 +94,7 @@ async def logout_user(
 
 
 @router.get(
-    '/reset_password',
+    '/reset-password',
     status_code=status.HTTP_200_OK,
     description='HTML шаблон для восстановления пароля',
     name='reset_password:page',
@@ -114,7 +114,7 @@ async def reset_password_template(
     
 
 @router.post(
-    '/reset_password',
+    '/reset-password',
     status_code=status.HTTP_200_OK,
     description='Эндпоинт для сброса пароля',
 )
@@ -128,7 +128,7 @@ async def reset_password(
     
     
 @router.get(
-    '/reset_password/confirm',
+    '/reset-password/confirm',
     status_code=status.HTTP_200_OK,
     description='Эндпоинт для сброса пароля',
 )
@@ -148,7 +148,7 @@ async def reset_password_token(
 
     
 @router.post(
-    '/reset_password/confirm',
+    '/reset-password/confirm',
     status_code=status.HTTP_200_OK,
     description='Эндпоинт для сброса пароля',
 )
