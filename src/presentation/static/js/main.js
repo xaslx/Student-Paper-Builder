@@ -137,10 +137,23 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-function toggleProfileMenu() {
+function toggleProfileMenu(event) {
+    event.stopPropagation();
     const profileMenu = document.getElementById("profileMenu");
     profileMenu.classList.toggle("active");
 }
+
+
+document.addEventListener('click', function(event) {
+    const profileMenu = document.getElementById("profileMenu");
+    const profileContainer = document.querySelector('.profile-container');
+
+    if (!profileMenu.contains(event.target) && !profileContainer.contains(event.target)) {
+        profileMenu.classList.remove("active");
+    }
+});
+
+document.querySelector('.profile-container').addEventListener('click', toggleProfileMenu);
 
 async function logout() {
     try {
