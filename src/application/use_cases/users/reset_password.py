@@ -10,6 +10,7 @@ from src.infrastructure.repositories.users.base import BaseUsersRepository
 from src.infrastructure.broker_messages.rabbitmq.publisher import publish
 import string
 import random
+from src.presentation.static.templates.email_templates import get_reset_password_template, after_reset_password_template
 
 
 CHARACTERS: str = string.ascii_letters + string.digits + string.punctuation
@@ -27,10 +28,12 @@ class ResetPasswordUseCase:
             raise UserNotFoundException()
         
         token, _= self.jwt_service.create_access_token({'sub': user.uuid}, minutes=5)
+        html_body: str = get_reset_password_template(token=token)
+        
         await publish(
             to=user.email,
             subject='Восстановление пароля',
-            body=f'Перейдите по ссылке ниже чтобы сбросить пароль\n127.0.0.1:8000/reset_password/confirm/?token={token}'
+            body=html_body
         )
         
         
@@ -55,10 +58,12 @@ class ResetPasswordCheckTokenUseCase:
             hashed_password: str = self.hash_service.get_password_hash(password=new_password)
             res: bool = await self.user_repository.update_user_password(uuid=user.uuid, hashed_password=hashed_password)
             if res:
+
+                html_body: str = after_reset_password_template(username=user.username.to_raw(), new_password=new_password)
                 await publish(
                     to=user.email,
                     subject='Сброс пароля',
-                    body=f'Вы сбросили пароль.\nВаш логин: {user.username.to_raw()}\nВаш новый пароль: {new_password}\nТеперь вы можете войти на сервис с новым паролем'
+                    body=html_body,
                 )
             return True
         else:
