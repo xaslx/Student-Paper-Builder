@@ -363,7 +363,7 @@ async function resetPassword(event) {
     const email = document.getElementById('email').value;
 
     try {
-        const response = await fetch('/reset_password', {
+        const response = await fetch('/reset-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -415,7 +415,7 @@ async function resetPasswordConfirm() {
     }
 
     try {
-        const response = await fetch(`/reset_password/confirm?token=${encodeURIComponent(token)}`, {
+        const response = await fetch(`/reset-password/confirm?token=${encodeURIComponent(token)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
