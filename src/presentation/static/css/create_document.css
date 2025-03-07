@@ -406,6 +406,7 @@ details summary::before {
     margin-top: 10px;
     margin-left: 15px;
     transition: background-color 0.3s ease;
+    border-radius: 5px;
 }
 
 .full-width-btn:hover {
