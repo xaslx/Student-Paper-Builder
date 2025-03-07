@@ -2,7 +2,6 @@ import asyncio
 import aiormq
 import json
 from aiormq.abc import DeliveredMessage
-from aiosmtplib import SMTP
 from src.settings.config import Config
 from email.message import EmailMessage
 import logging
@@ -19,7 +18,7 @@ async def send_email(to: str, subject: str, body: str):
     msg['To'] = to
     msg['Subject'] = subject
 
-    msg.set_content(body)
+    msg.set_content(body, subtype='html')
 
     with smtplib.SMTP_SSL(config.smtp.smtp_host, config.smtp.smtp_port) as server:
         server.login(config.smtp.smtp_user, config.smtp.smtp_pass)
