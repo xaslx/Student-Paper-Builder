@@ -31,7 +31,7 @@ class DocxCreator:
 
         instrText = self._create_element('w:instrText')
         self._create_attribute(instrText, 'xml:space', 'preserve')
-        instrText.text = "PAGE"
+        instrText.text = 'PAGE'
 
         fldChar2 = self._create_element('w:fldChar')
         self._create_attribute(fldChar2, 'w:fldCharType', 'end')
@@ -49,7 +49,7 @@ class DocxCreator:
         first_page_footer = section.first_page_footer
         paragraph = first_page_footer.paragraphs[0] if first_page_footer.paragraphs else first_page_footer.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = paragraph.add_run(f"{city}, {year}")
+        run = paragraph.add_run(f'{city}, {year}')
         run.font.name = 'Times New Roman'
         run.font.size = Pt(12)
         paragraph.paragraph_format.space_after = Pt(0)
@@ -60,35 +60,41 @@ class DocxCreator:
         paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         run = paragraph.add_run()
         self._add_page_number(run)
-
+    
     def fill_template_with_breaks(self, context: dict, output_path: str) -> None:
 
         doc_tpl = DocxTemplate(self.template_path)
         doc_tpl.render(context=context)
-        doc_tpl.save(f'src/presentation/static/docx/{output_path}.docx')
+        
+
+        doc = doc_tpl.docx
+        doc.sections[0].different_first_page_header_footer = True
+
+        title_page = context.get('title_page', {})
+        city = title_page.get('city', '')
+        year = title_page.get('year', '')
+        self._add_footer(doc, city, year)
 
 
-        final_doc = Document(f'src/presentation/static/docx/{output_path}.docx')
-        final_doc.sections[0].different_first_page_header_footer = True
+        output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
+        doc_tpl.save(output_docx_path)
+        
 
-
-        title_page = context.get("title_page", {})
-        city = title_page.get("city", "")
-        year = title_page.get("year", "")
-
-        self._add_footer(final_doc, city, year)
-        final_doc.save(f'src/presentation/static/docx/{output_path}.docx')
-        self._convert_to_pdf(
-            docx_path=f'src/presentation/static/docx/{output_path}.docx',
-            pdf_path=f'src/presentation/static/pdf/{output_path}.pdf',
-        )
+        try:
+            self._convert_to_pdf(
+                docx_path=output_docx_path,
+                pdf_path=f'src/presentation/static/pdf/{output_path}.pdf',
+            )
+        except subprocess.CalledProcessError as e:
+            print(f'Ошибка конвертации: {e}')
+            raise subprocess.CalledProcessError()
         
     def _convert_to_pdf(self, docx_path: str, pdf_path: str) -> None:
 
         subprocess.run([
-            "libreoffice",
-            "--headless",
-            "--convert-to", "pdf",
-            "--outdir", "/".join(pdf_path.split("/")[:-1]),
+            'libreoffice',
+            '--headless',
+            '--convert-to', 'pdf',
+            '--outdir', '/'.join(pdf_path.split('/')[:-1]),
             docx_path
         ], check=True)
