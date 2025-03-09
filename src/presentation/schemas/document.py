@@ -21,6 +21,11 @@ class Section(BaseModel):
     subsection: str | None = Field(default=None)
 
 
+class Application(BaseModel):
+    path: str | None = Field(default=None)
+    description: str | None = Field(default=None)
+
+
 class CreateDocument(BaseModel):
     title_page: TitlePage
     name: str = Field(min_length=5, max_length=50, default=None)
@@ -29,7 +34,7 @@ class CreateDocument(BaseModel):
     main_sections: list[Section] | None = Field(default=None)
     conclusion: str | None = Field(default=None)
     references: list[str] | None = Field(default=None)
-    appendices: list[str] | None = Field(default=None)
+    appendices: list[Application] | None = Field(default=None)
     
 
 class UpdateDocument(CreateDocument):
