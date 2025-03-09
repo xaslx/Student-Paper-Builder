@@ -3,6 +3,7 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from src.application.use_cases.documents.upload_image import UploadImageUseCase
 from src.application.use_cases.documents.download import DownloadDocument
 from src.application.use_cases.documents.update import UpdateDocumentUseCase
 from src.application.use_cases.documents.get_document import GetDocumentUseCase
@@ -187,7 +188,12 @@ class AppProvider(Provider):
         
         
     @provide(scope=Scope.REQUEST)
-    
+    def get_upload_image_use_case(
+        self,
+        document_repository: BaseDocumentsRepository,
+    ) -> UploadImageUseCase:
+        
+        return UploadImageUseCase(document_repository=document_repository)
     
 
     #dependencies
