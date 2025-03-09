@@ -96,12 +96,14 @@ def title_page_from_mongo(data: dict) -> TitlePage:
 def application_to_mongo(application: Application) -> dict:
     return {
         'path': application.path,
-        'description': application.description
+        'description': application.description,
+        'name': application.name,
     }
 
 
 def application_from_mongo(data: dict) -> Application:
     return Application(
         path=data.get('path'),
-        description=data.get('description')
+        description=data.get('description'),
+        name=data.get('name'),
     )
