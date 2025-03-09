@@ -2,7 +2,7 @@ from dataclasses import dataclass, field, fields, replace, asdict
 
 from src.presentation.schemas.document import UpdateDocument
 from src.domain.common.entity import BaseEntity
-from src.domain.document.value_object import Section, TitlePage
+from src.domain.document.value_object import Application, Section, TitlePage
 
 
 @dataclass(kw_only=True)
@@ -15,7 +15,7 @@ class Document(BaseEntity):
     main_sections: list[Section]
     conclusion: str
     references: list[str]
-    appendices: list[str] | None = field(default=None)
+    appendices: list[Application] | None = field(default=None)
 
 
     def update(self, new_data: UpdateDocument):

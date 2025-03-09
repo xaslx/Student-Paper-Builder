@@ -28,3 +28,9 @@ class Section:
     title: str
     content: str
     subsection: str | None
+
+
+@dataclass(frozen=True, kw_only=True)
+class Application:
+    path: str
+    description: str
