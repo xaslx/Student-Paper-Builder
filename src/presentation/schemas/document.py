@@ -23,6 +23,7 @@ class Section(BaseModel):
 
 class Application(BaseModel):
     path: str | None = Field(default=None)
+    name: str | None = Field(default=None)
     description: str | None = Field(default=None)
 
 
