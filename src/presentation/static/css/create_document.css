@@ -513,3 +513,64 @@ details summary::before {
     width: 98%;
     height: auto;
 }
+
+.appendices-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.appendix-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    width: 500px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding-bottom: 30px;
+    overflow: hidden;
+}
+
+.appendix-item img {
+    max-width: 100%;
+    height: 200px;
+    margin-top: 20px;
+    object-fit: contain;
+    width: 100%;
+}
+
+.appendix-item p {
+    margin: 0;
+    font-size: 14px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    overflow-y: auto;
+    max-height: 100px;
+    max-width: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.delete-appendix-btn {
+    background: none;
+    border: none;
+    color: red;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    bottom: auto;
+}
+
+.delete-appendix-btn:hover {
+    color: darkred;
+}

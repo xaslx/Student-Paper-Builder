@@ -616,4 +616,137 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     }
+
+    function deleteAppendix(event) {
+        const deleteBtn = event.target.closest('.delete-appendix-btn');
+        if (!deleteBtn) return;
+    
+        const appendixItem = deleteBtn.closest('.appendix-item');
+        if (!appendixItem) return;
+    
+        Swal.fire({
+            title: 'Удалить приложение?',
+            text: 'Вы уверены, что хотите удалить это приложение?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Удалить',
+            cancelButtonText: 'Отмена',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                appendixItem.remove();
+                updateAppendicesNumbers();
+                updateAppendicesOnServer();
+            }
+        });
+    }
+
+    function updateAppendicesNumbers() {
+        const appendixItems = document.querySelectorAll('.appendix-item');
+        appendixItems.forEach((item, index) => {
+            const pElement = item.querySelector('p');
+            const description = pElement.textContent.split('. ')[1];
+        });
+    }
+    
+    function updateAppendicesOnServer() {
+        const appendices = Array.from(document.querySelectorAll('.appendix-item')).map(item => {
+            const imgSrc = item.querySelector('img').src;
+            const fileName = imgSrc.split('/').pop();
+            console.log('Имя файла:', fileName);
+            
+            return {
+                path: `src/presentation/static/images/${fileName}`,
+                name: fileName,
+                description: item.querySelector('p').textContent 
+            };            
+        });
+    
+        updateDocument(documentUuid, 'appendices', appendices);
+    }
+    
+    
+
+    document.querySelector('.appendices-container').addEventListener('click', deleteAppendix);
+
+    const imageModal = document.getElementById('image-modal');
+    const addImageBtn = document.getElementById('add-image-btn');
+    const closeImageModalBtn = imageModal.querySelector('.close');
+    const imageForm = document.getElementById('image-form');
+
+    if (addImageBtn) {
+        addImageBtn.addEventListener('click', function () {
+            imageModal.style.display = 'block';
+        });
+    }
+
+    if (closeImageModalBtn) {
+        closeImageModalBtn.addEventListener('click', function () {
+            imageModal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === imageModal) {
+            imageModal.style.display = 'none';
+        }
+    });
+
+    if (imageForm) {
+        imageForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const description = document.getElementById('image-description').value;
+            const fileInput = document.getElementById('image-file');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('description', description);
+
+                fetch(`/documents/${documentUuid}`, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        localStorage.setItem('openSection', 'appendices');
+
+                        notie.alert({
+                            type: 'success',
+                            text: 'Документ успешно обновлен',
+                            position: 'top-right',
+                            time: 3
+                        });
+
+                        imageModal.style.display = 'none';
+
+                        imageForm.reset();
+
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        notie.alert({
+                            type: 'error',
+                            text: 'Ошибка при загрузке файла',
+                            position: 'top-right',
+                            time: 3
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    notie.alert({
+                        type: 'error',
+                        text: 'Ошибка при загрузке файла',
+                        position: 'top-right',
+                        time: 3
+                    });
+                });
+            }
+        });
+    }
+        
 });

@@ -304,16 +304,44 @@
         <div class="section-item">
             <div class="status-wrapper">
                 <span class="{% if document.appendices %}status-filled{% else %}status-empty{% endif %}"
-                title="{% if document.appendices %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
+                      title="{% if document.appendices %}Этот раздел заполнен{% else %}Этот раздел не заполнен{% endif %}"></span>
             </div>
             <details data-section="appendices">
                 <summary class="section-button">Приложения</summary>
                 <div class="form-container">
-
+                    <div class="appendices-container">
+                        {% for appendix in document.appendices %}
+                            <div class="appendix-item" data-index="{{ loop.index0 }}">
+                                <img src="/static/images/{{ appendix.name }}" alt="Приложение {{ loop.index }}">
+                                Рисунок {{ loop.index }}. <p>{{ appendix.description }}</p>
+                                <button type="button" class="delete-appendix-btn" data-index="{{ loop.index0 }}">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button id="add-image-btn" type="button" class="btn btn-add">Добавить изображение</button>
                 </div>
             </details>
         </div>
 
+        <div id="image-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Добавить изображение</h2>
+                <form id="image-form">
+                    <div class="form-group">
+                        <label for="image-description">Описание изображения:</label>
+                        <input type="text" id="image-description" name="image-description" placeholder="Пример: Топ 10 языков программирования за 2025 год" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="image-file">Выберите изображение:</label>
+                        <input type="file" id="image-file" name="image-file" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn-save">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        
         <div class="save-buttons">
             <button class="save-docx-btn">Сохранить в DOCX</button>
             <button class="save-pdf-btn">Сохранить в PDF</button>
