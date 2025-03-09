@@ -1,8 +1,8 @@
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Mm
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import subprocess
 
@@ -62,23 +62,17 @@ class DocxCreator:
         self._add_page_number(run)
     
     def fill_template_with_breaks(self, context: dict, output_path: str) -> None:
-
         doc_tpl = DocxTemplate(self.template_path)
+
+        appendices = context.get('appendices', [])
+        for appendix in appendices:
+            if appendix.get('path'):
+                appendix['image'] = InlineImage(doc_tpl, appendix['path'], width=Mm(167), height=Mm(100))
+
         doc_tpl.render(context=context)
-        
-
-        doc = doc_tpl.docx
-        doc.sections[0].different_first_page_header_footer = True
-
-        title_page = context.get('title_page', {})
-        city = title_page.get('city', '')
-        year = title_page.get('year', '')
-        self._add_footer(doc, city, year)
-
 
         output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
         doc_tpl.save(output_docx_path)
-        
 
         try:
             self._convert_to_pdf(
