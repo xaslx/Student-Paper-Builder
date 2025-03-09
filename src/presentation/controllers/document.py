@@ -1,8 +1,10 @@
+import secrets
 from dishka.integrations.fastapi import FromDishka as Depends
 from dishka.integrations.fastapi import inject
-from fastapi import APIRouter, Request, status, Query
+from fastapi import APIRouter, Form, HTTPException, Request, status, Query, File, UploadFile
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+from src.application.use_cases.documents.upload_image import UploadImageUseCase
 from src.application.use_cases.documents.download import DownloadDocument
 from src.application.use_cases.documents.create import CreateDocumentUseCase
 from src.application.use_cases.documents.delete import (
@@ -15,6 +17,7 @@ from src.domain.user.exception import UserNotAuthenticatedException
 from src.presentation.schemas.document import CreateDocument, UpdateDocument
 from typing import Annotated
 from fastapi.responses import FileResponse
+from src.presentation.schemas.document import Application
 
 
 router: APIRouter = APIRouter(prefix='/documents', tags=['Документы'])
@@ -149,6 +152,42 @@ async def update_document(
     user: Depends[User],
     use_case: Depends[UpdateDocumentUseCase],
 ) -> JSONResponse:
-    
+
     await use_case.execute(document_uuid=document_uuid, update_document=document, user_uuid=user.uuid)
     return JSONResponse(content={'detail': 'Документ обновлен'}, status_code=status.HTTP_200_OK)
+
+
+@router.post(
+    '/{document_uuid}',
+    status_code=status.HTTP_200_OK,
+    description='Эндпоинт для сохранения файла',
+)
+@inject
+async def upload_image(
+    document_uuid: str,
+    image: Annotated[UploadFile, File()],
+    user: Depends[User],
+    use_case: Depends[UploadImageUseCase],
+    description: str = Form(...),
+) -> JSONResponse:
+    
+    extension: str = image.filename.split('.')[-1]
+
+    if not user:
+        raise UserNotAuthenticatedException()
+    
+    if extension not in ['png', 'jpg', 'jpeg', 'ico']:
+        raise HTTPException(status_code=400, detail='Допустимые расширения: png, jpg, jpeg, ico')
+    
+    uniq_name: str = f'{secrets.token_urlsafe(10)}.{extension}'
+    application: Application = Application(path=f'src/presentation/static/images/{uniq_name}', description=description, name=uniq_name)
+    
+    await use_case.execute(
+        image=image,
+        document_uuid=document_uuid,
+        uniq_filename=uniq_name,
+        application=application,
+        user_id=user.uuid,
+    )
+
+    return JSONResponse(content={'success': True},  status_code=200)
