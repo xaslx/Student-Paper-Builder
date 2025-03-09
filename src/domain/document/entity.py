@@ -27,7 +27,6 @@ class Document(BaseEntity):
         self.name = new_data.name or self.name
         self.introduction = new_data.introduction or self.introduction
         self.conclusion = new_data.conclusion or self.conclusion
-        self.appendices = new_data.appendices or self.appendices
         self.title_page = updated_title_page or self.title_page
         self.updated_at = new_data.updated_at or self.updated_at
         
@@ -39,3 +38,6 @@ class Document(BaseEntity):
 
         if new_data.main_sections is not None:
             self.main_sections = new_data.main_sections
+        
+        if new_data.appendices is not None:
+            self.appendices = new_data.appendices

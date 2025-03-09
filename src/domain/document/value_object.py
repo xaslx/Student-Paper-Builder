@@ -34,3 +34,4 @@ class Section:
 class Application:
     path: str
     description: str
+    name: str
