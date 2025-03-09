@@ -1,13 +1,11 @@
 from datetime import datetime
 from src.domain.document.entity import Document
-from src.domain.document.value_object import TitlePage
-from src.domain.document.value_object import Section
+from src.domain.document.value_object import TitlePage, Section, Application
 import pytz
 from src.const import MOSCOW_TZ
 
 
 def document_to_mongo(document: Document) -> dict:
-
     return {
         'uuid': document.uuid,
         'user_uuid': document.user_uuid,
@@ -18,14 +16,13 @@ def document_to_mongo(document: Document) -> dict:
         'main_sections': [section_to_mongo(section=sec) for sec in document.main_sections],
         'conclusion': document.conclusion,
         'references': document.references,
-        'appendices': document.appendices,
+        'appendices': [application_to_mongo(app) for app in document.appendices],
         'created_at': document.created_at,
         'updated_at': document.updated_at
     }
 
 
 def document_from_mongo(data: dict) -> Document:
-    
     created_at = data.get('created_at')
     updated_at = data.get('updated_at')
     
@@ -44,22 +41,21 @@ def document_from_mongo(data: dict) -> Document:
         main_sections=[section_from_mongo(sec) for sec in data.get('main_sections', [])],
         conclusion=data.get('conclusion'),
         references=data.get('references'),
-        appendices=data.get('appendices', []),
+        appendices=[application_from_mongo(app) for app in data.get('appendices', [])],
         created_at=created_at,
         updated_at=updated_at
     )
 
 
 def section_to_mongo(section: Section) -> dict:
-
     return {
         'title': section.title,
         'content': section.content,
         'subsection': section.subsection
     }
 
-def section_from_mongo(data: dict) -> Section:
 
+def section_from_mongo(data: dict) -> Section:
     return Section(
         title=data.get('title'),
         content=data.get('content'),
@@ -68,7 +64,6 @@ def section_from_mongo(data: dict) -> Section:
 
 
 def title_page_to_mongo(title_page: TitlePage) -> dict:
-
     return {
         'type_of_work': title_page.type_of_work,
         'discipline': title_page.discipline,
@@ -80,12 +75,10 @@ def title_page_to_mongo(title_page: TitlePage) -> dict:
         'faculty': title_page.faculty,
         'city': title_page.city,
         'teaching_position': title_page.teaching_position,
-        
     }
 
 
 def title_page_from_mongo(data: dict) -> TitlePage:
-    
     return TitlePage(
         type_of_work=data.get('type_of_work'),
         discipline=data.get('discipline'),
@@ -97,4 +90,18 @@ def title_page_from_mongo(data: dict) -> TitlePage:
         faculty=data.get('faculty'),
         city=data.get('city'),
         teaching_position=data.get('teaching_position')
+    )
+
+
+def application_to_mongo(application: Application) -> dict:
+    return {
+        'path': application.path,
+        'description': application.description
+    }
+
+
+def application_from_mongo(data: dict) -> Application:
+    return Application(
+        path=data.get('path'),
+        description=data.get('description')
     )
