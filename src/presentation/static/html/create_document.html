@@ -313,7 +313,7 @@
                         {% for appendix in document.appendices %}
                             <div class="appendix-item" data-index="{{ loop.index0 }}">
                                 <img src="/static/images/{{ appendix.name }}" alt="Приложение {{ loop.index }}">
-                                Рисунок {{ loop.index }}. <p>{{ appendix.description }}</p>
+                                <p>{{ appendix.description }}</p>
                                 <button type="button" class="delete-appendix-btn" data-index="{{ loop.index0 }}">&times;</button>
                             </div>
                         {% endfor %}
