@@ -25,7 +25,7 @@ class JWTServiceImpl(JWTService):
     def create_access_token(self, data: dict, **kwargs) -> tuple[str, int]:
         to_encode = data.copy()
         expire = datetime.now() + timedelta(**kwargs)
-        to_encode.update({'exp': datetime.now() + timedelta(seconds=10)})
+        to_encode.update({'exp': expire})
         return jwt.encode(to_encode, self.config.jwt.secret_key, self.config.jwt.algorithm), expire
 
     def valid_token(self, token: str) -> dict | None:
