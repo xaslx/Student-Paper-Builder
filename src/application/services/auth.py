@@ -41,6 +41,10 @@ class AuthServiceImpl(BaseAuthService):
 
     async def get_current_user(self, token: str) -> User | None:
         payload = self.jwt_service.valid_token(token=token)
+    
+        if not payload:
+            return None
+        
         user_uuid = payload.get('sub')
         user: User | None = await self.user_repository.get_user_by_uuid(uuid=user_uuid)
 
