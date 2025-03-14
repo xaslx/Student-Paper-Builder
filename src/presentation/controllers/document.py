@@ -38,11 +38,12 @@ async def get_document(
     template: Depends[Jinja2Templates],
     documents: Depends[list[Document]],
 ) -> HTMLResponse:
-    
-    if not user:
-        raise UserNotAuthenticatedException()
-    
-    document: Document | None = await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
+
+    document: Document | None = None
+
+    if user:
+        document: Document | None = await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
+
     if document:
         return template.TemplateResponse(
             request=request,
@@ -72,7 +73,7 @@ async def download_document(
     
     if not user:
         raise UserNotAuthenticatedException()
-    
+
     res = await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
     
     if res:
@@ -99,7 +100,7 @@ async def delete_document(
     
     if not user:
         raise UserNotAuthenticatedException()
-    
+
     await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
     return JSONResponse(content={'detail': 'Документ удален'}, status_code=status.HTTP_200_OK)
 
@@ -117,7 +118,7 @@ async def delete_all_documents(
     
     if not user:
         raise UserNotAuthenticatedException()
-    
+
     await use_case.execute(user_uuid=user.uuid)
     return JSONResponse(content={'detail': 'Все документы удалены'}, status_code=status.HTTP_200_OK)
 
@@ -136,7 +137,7 @@ async def add_document(
     
     if not user:
         raise UserNotAuthenticatedException()
-    
+
     return await use_case.execute(document=new_document, user_uuid=user.uuid)
 
 
@@ -152,6 +153,9 @@ async def update_document(
     user: Depends[User],
     use_case: Depends[UpdateDocumentUseCase],
 ) -> JSONResponse:
+    
+    if not user:
+        raise UserNotAuthenticatedException()
 
     await use_case.execute(document_uuid=document_uuid, update_document=document, user_uuid=user.uuid)
     return JSONResponse(content={'detail': 'Документ обновлен'}, status_code=status.HTTP_200_OK)
@@ -171,11 +175,11 @@ async def upload_image(
     description: str = Form(...),
 ) -> JSONResponse:
     
-    extension: str = image.filename.split('.')[-1]
-
     if not user:
         raise UserNotAuthenticatedException()
     
+    extension: str = image.filename.split('.')[-1]
+
     if extension not in ['png', 'jpg', 'jpeg', 'ico']:
         raise HTTPException(status_code=400, detail='Допустимые расширения: png, jpg, jpeg, ico')
     
