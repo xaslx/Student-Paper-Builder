@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
-from src.domain.jwt.exception import IncorrectTokenException, TokenExpiredException
 from src.settings.config import Config
 from jose import ExpiredSignatureError, JWTError, jwt
 from dataclasses import dataclass
@@ -26,14 +25,14 @@ class JWTServiceImpl(JWTService):
     def create_access_token(self, data: dict, **kwargs) -> tuple[str, int]:
         to_encode = data.copy()
         expire = datetime.now() + timedelta(**kwargs)
-        to_encode.update({'exp': expire})
+        to_encode.update({'exp': datetime.now() + timedelta(seconds=10)})
         return jwt.encode(to_encode, self.config.jwt.secret_key, self.config.jwt.algorithm), expire
 
     def valid_token(self, token: str) -> dict | None:
         try:
             payload = jwt.decode(token,self.config.jwt.secret_key, self.config.jwt.algorithm)
         except ExpiredSignatureError:
-            raise TokenExpiredException()
+            return None
         except JWTError:
-            raise IncorrectTokenException()
+            return None
         return payload
