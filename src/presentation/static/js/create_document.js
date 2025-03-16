@@ -52,42 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.removeItem('openSection');
     }
     
-    function checkRequiredSections() {
-        const requiredSections = [
-            'Титульный лист',
-            'Введение',
-            'Основная часть',
-            'Заключение',
-            'Список используемых источников'
-        ];
-
-        return requiredSections.every(sectionTitle => {
-            const sectionItem = Array.from(document.querySelectorAll('.section-item')).find(item => {
-                return item.querySelector('summary').textContent.trim() === sectionTitle;
-            });
-            
-            if (!sectionItem) return false;
-            const statusElement = sectionItem.querySelector('.status-wrapper span');
-            return statusElement.classList.contains('status-filled');
-        });
-    }
 
     function handleSaveButtonClick(e) {
-        if (!checkRequiredSections()) {
-            e.preventDefault();
-            notie.alert({
-                type: 'error',
-                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
-            Титульный лист,
-            Введение,
-            Основная часть,
-            Заключение,
-            Список используемых источников`,
-                position: 'top-right',
-                time: 6
-            });
-            return false;
-        }
         return true;
     }
 
@@ -526,42 +492,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const documentUuid = document.getElementById('documentUuid').value;
 
     saveDocxBtn.addEventListener('click', function() {
-        if (!checkRequiredSections()) {
-            notie.alert({
-                type: 'error',
-                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
-            Титульный лист,
-            Введение,
-            Основная часть,
-            Заключение,
-            Список используемых источников`,
-                position: 'top-right',
-                time: 6
-            });
-            return;
-        }
-    
         disableButtonsForSeconds(2);
         showDownloadMessage();
         saveDocument('docx');
     });
     
     savePdfBtn.addEventListener('click', function() {
-        if (!checkRequiredSections()) {
-            notie.alert({
-                type: 'error',
-                text: `Нельзя скачать документ, пока не заполнены все обязательные разделы:
-            Титульный лист,
-            Введение,
-            Основная часть,
-            Заключение,
-            Список используемых источников`,
-                position: 'top-right',
-                time: 6
-            });
-            return;
-        }
-    
         disableButtonsForSeconds(2);
         showDownloadMessage();
         saveDocument('pdf');
