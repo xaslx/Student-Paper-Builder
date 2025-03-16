@@ -10,19 +10,15 @@ import subprocess
 class DocxCreator:
 
     def __init__(self, template_path: str):
-
         self.template_path = template_path
-
 
     def _create_element(self, name: str) -> OxmlElement:
         return OxmlElement(name)
-
 
     def _create_attribute(self, element: OxmlElement, name: str, value: str) -> None:
         element.set(qn(name), value)
 
     def _add_page_number(self, run) -> None:
-
         run.font.name = 'Times New Roman'
         run.font.size = Pt(12)
 
@@ -41,10 +37,8 @@ class DocxCreator:
         run._r.append(fldChar2)
 
     def _add_footer(self, doc: Document, city: str, year: int) -> None:
-
         section = doc.sections[0]
         section.footer_distance = Pt(10)
-
 
         first_page_footer = section.first_page_footer
         paragraph = first_page_footer.paragraphs[0] if first_page_footer.paragraphs else first_page_footer.add_paragraph()
@@ -60,7 +54,7 @@ class DocxCreator:
         paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         run = paragraph.add_run()
         self._add_page_number(run)
-    
+
     def fill_template_with_breaks(self, context: dict, output_path: str) -> None:
         doc_tpl = DocxTemplate(self.template_path)
 
@@ -71,9 +65,30 @@ class DocxCreator:
 
         doc_tpl.render(context=context)
 
+
+        temp_docx_path = f'src/presentation/static/docx/{output_path}_temp.docx'
+        doc_tpl.save(temp_docx_path)
+
+
+        final_doc = Document(temp_docx_path)
+
+        doc_tpl.render(context=context)
+
+
         output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
         doc_tpl.save(output_docx_path)
 
+
+        final_doc = Document(output_docx_path)
+        final_doc.sections[0].different_first_page_header_footer = True
+
+        title_page = context.get('title_page', {})
+        city = title_page.get('city', 'Город')
+        year = title_page.get('year', 2023)
+        self._add_footer(final_doc, city, year)
+
+
+        final_doc.save(output_docx_path)
         try:
             self._convert_to_pdf(
                 docx_path=output_docx_path,
@@ -82,7 +97,7 @@ class DocxCreator:
         except subprocess.CalledProcessError as e:
             print(f'Ошибка конвертации: {e}')
             raise subprocess.CalledProcessError()
-        
+
     def _convert_to_pdf(self, docx_path: str, pdf_path: str) -> None:
 
         subprocess.run([
