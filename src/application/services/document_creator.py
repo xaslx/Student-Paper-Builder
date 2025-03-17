@@ -1,3 +1,4 @@
+import os
 from docx import Document
 from docx.shared import Pt, Mm
 from docx.oxml.ns import qn
@@ -40,14 +41,20 @@ class DocxCreator:
         section = doc.sections[0]
         section.footer_distance = Pt(10)
 
+
         first_page_footer = section.first_page_footer
         paragraph = first_page_footer.paragraphs[0] if first_page_footer.paragraphs else first_page_footer.add_paragraph()
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        
+
         run = paragraph.add_run(f'{city}, {year}')
         run.font.name = 'Times New Roman'
-        run.font.size = Pt(12)
+        run.font.size = Pt(14)
+        run.font.superscript = False
+        
+
+        paragraph.paragraph_format.space_before = Pt(6)
         paragraph.paragraph_format.space_after = Pt(0)
-        paragraph.paragraph_format.space_before = Pt(0)
 
         footer = section.footer
         paragraph = footer.paragraphs[0] if footer.paragraphs else footer.add_paragraph()
@@ -58,10 +65,12 @@ class DocxCreator:
     def fill_template_with_breaks(self, context: dict, output_path: str) -> None:
         doc_tpl = DocxTemplate(self.template_path)
 
+
         appendices = context.get('appendices', [])
         for appendix in appendices:
             if appendix.get('path'):
                 appendix['image'] = InlineImage(doc_tpl, appendix['path'], width=Mm(167), height=Mm(100))
+
 
         doc_tpl.render(context=context)
 
@@ -71,15 +80,6 @@ class DocxCreator:
 
 
         final_doc = Document(temp_docx_path)
-
-        doc_tpl.render(context=context)
-
-
-        output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
-        doc_tpl.save(output_docx_path)
-
-
-        final_doc = Document(output_docx_path)
         final_doc.sections[0].different_first_page_header_footer = True
 
         title_page = context.get('title_page', {})
@@ -88,7 +88,14 @@ class DocxCreator:
         self._add_footer(final_doc, city, year)
 
 
+        output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
         final_doc.save(output_docx_path)
+
+        try:
+            os.remove(temp_docx_path)
+        except OSError as e:
+            print(f'Ошибка при удалении временного файла: {e}')
+
         try:
             self._convert_to_pdf(
                 docx_path=output_docx_path,
@@ -99,7 +106,6 @@ class DocxCreator:
             raise subprocess.CalledProcessError()
 
     def _convert_to_pdf(self, docx_path: str, pdf_path: str) -> None:
-
         subprocess.run([
             'libreoffice',
             '--headless',
