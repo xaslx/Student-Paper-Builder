@@ -6,7 +6,6 @@ from src.domain.user.exception import NotAccessErrorException
 from src.domain.document.entity import Document
 from src.infrastructure.repositories.documents.base import BaseDocumentsRepository
 from src.infrastructure.repositories.documents.converter import document_to_mongo
-from fastapi import HTTPException
 
 
 @dataclass
@@ -17,14 +16,6 @@ class DownloadDocument:
     async def execute(self, document_uuid: str, user_uuid: str) -> str:
         
         document: Document | None = await self.document_repository.get_document_by_uuid(document_uuid=document_uuid)
-        
-        if (not document.title_page) or \
-            (not document.main_sections) or \
-            (not document.introduction) or \
-            (not document.conclusion) or \
-            (not document.references):
-                
-            raise HTTPException(status_code=400, detail='Не все разделы заполнены')
         
         if not document:
             raise DocumentNotFoundException()
