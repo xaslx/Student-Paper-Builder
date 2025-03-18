@@ -5,7 +5,7 @@ from fastapi import status
 # JWT token
 class TokenExpiredException(DomainErrorException):
     status_code = status.HTTP_401_UNAUTHORIZED
-    detail = 'Ссылка устарела'
+    detail = 'JWT токен устарел'
 
 
 class TokenAbsentException(DomainErrorException):
