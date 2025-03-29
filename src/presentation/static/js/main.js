@@ -46,6 +46,7 @@ document.getElementById("newDocumentButton").addEventListener("click", async () 
                     type_of_work: null,
                     discipline: null,
                     subject: null,
+                    group_number: null,
                     educational_institution: null,
                     year: null,
                     student_fullname: null,

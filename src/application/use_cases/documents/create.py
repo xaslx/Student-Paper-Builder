@@ -12,11 +12,11 @@ class CreateDocumentUseCase:
     document_repository: BaseDocumentsRepository
     
     async def execute(self, document: CreateDocument, user_uuid: str) -> str:
-        
         title_page: TitlePage = TitlePage(
             type_of_work=document.title_page.type_of_work,
             discipline=document.title_page.discipline,
             subject=document.title_page.subject,
+            group_number=document.title_page.group_number,
             educational_institution=document.title_page.educational_institution,
             year=document.title_page.year,
             student_fullname=document.title_page.student_fullname,

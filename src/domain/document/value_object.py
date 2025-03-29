@@ -21,6 +21,7 @@ class TitlePage:
     teaching_position: str
     created_at: datetime = field(default_factory=lambda: datetime.now())
     updated_at: datetime | None = field(default=None)
+    group_number: str
 
 
 @dataclass(frozen=True, kw_only=True)

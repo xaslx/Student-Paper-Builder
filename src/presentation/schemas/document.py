@@ -6,6 +6,7 @@ class TitlePage(BaseModel):
     type_of_work: str | None = Field(default=None)
     discipline: str | None = Field(default=None)
     subject: str | None = Field(default=None)
+    group_number: str | None = Field(default=None)
     educational_institution: str | None = Field(default=None)
     year: int | None = Field(default=None)
     student_fullname: str | None = Field(default=None)

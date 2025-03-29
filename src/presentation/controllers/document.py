@@ -43,7 +43,7 @@ async def get_document(
 
     if user:
         document: Document | None = await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
-
+    print(document)
     if document:
         return template.TemplateResponse(
             request=request,

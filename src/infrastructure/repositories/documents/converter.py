@@ -75,6 +75,7 @@ def title_page_to_mongo(title_page: TitlePage) -> dict:
         'faculty': title_page.faculty,
         'city': title_page.city,
         'teaching_position': title_page.teaching_position,
+        'group_number': title_page.group_number,
     }
 
 
@@ -89,7 +90,8 @@ def title_page_from_mongo(data: dict) -> TitlePage:
         teacher_fullname=data.get('teacher_fullname'),
         faculty=data.get('faculty'),
         city=data.get('city'),
-        teaching_position=data.get('teaching_position')
+        teaching_position=data.get('teaching_position'),
+        group_number=data.get('group_number'),
     )
 
 

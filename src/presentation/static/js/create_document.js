@@ -71,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const titlePageForm = document.getElementById('titlePageForm');
     if (titlePageForm) {
+        console.log('group_number:', document.getElementById('group_number').value);
+
         titlePageForm.addEventListener('submit', function (event) {
             event.preventDefault();
             updateDocument(documentUuid, 'title_page', {
@@ -84,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 faculty: document.getElementById('faculty').value,
                 city: document.getElementById('city').value,
                 teaching_position: document.getElementById('teaching_position').value,
+                group_number: document.getElementById('group_number').value,
             });
         });
     }
