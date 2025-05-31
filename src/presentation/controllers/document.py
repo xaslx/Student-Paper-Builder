@@ -43,7 +43,7 @@ async def get_document(
 
     if user:
         document: Document | None = await use_case.execute(document_uuid=document_uuid, user_uuid=user.uuid)
-    print(document)
+
     if document:
         return template.TemplateResponse(
             request=request,
@@ -180,7 +180,7 @@ async def upload_image(
     
     extension: str = image.filename.split('.')[-1]
 
-    if extension not in ['png', 'jpg', 'jpeg', 'ico']:
+    if extension not in ['png', 'jpg', 'jpeg', 'webp']:
         raise HTTPException(status_code=400, detail='Допустимые расширения: png, jpg, jpeg, ico')
     
     uniq_name: str = f'{secrets.token_urlsafe(10)}.{extension}'
