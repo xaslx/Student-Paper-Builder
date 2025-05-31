@@ -6,12 +6,74 @@ from docx.oxml import OxmlElement
 from docxtpl import DocxTemplate, InlineImage
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 import subprocess
+from PIL import Image, UnidentifiedImageError
 
 
 class DocxCreator:
 
     def __init__(self, template_path: str):
         self.template_path = template_path
+
+    def _process_image(self, doc_tpl: DocxTemplate, image_path: str) -> dict:
+
+        if not os.path.exists(image_path):
+            return None
+
+        try:
+            with Image.open(image_path) as img:
+
+                if img.format not in ('PNG', 'JPEG', 'WEBP', 'JPG'):
+                    return None
+
+
+                if img.format == 'WEBP':
+                    try:
+                        png_path = os.path.splitext(image_path)[0] + '.png'
+                        img.save(png_path, 'PNG')
+                        image_path = png_path
+                    except Exception:
+                        return None
+
+
+                max_width_mm = 167
+                max_height_mm = 100
+                
+
+                max_width_pt = max_width_mm * 2.83465
+                max_height_pt = max_height_mm * 2.83465
+
+
+                width, height = img.size
+                
+
+                width_ratio = max_width_pt / width
+                height_ratio = max_height_pt / height
+                
+
+                ratio = min(width_ratio, height_ratio)
+                
+
+                new_width = int(width * ratio)
+                new_height = int(height * ratio)
+                
+
+                new_width_mm = new_width / 2.83465
+                new_height_mm = new_height / 2.83465
+
+                return {
+                    'path': image_path,
+                    'image': InlineImage(
+                        doc_tpl, 
+                        image_path, 
+                        width=Mm(new_width_mm), 
+                        height=Mm(new_height_mm))
+                }
+
+        except UnidentifiedImageError:
+            return None
+        except Exception:
+            return None
+
 
     def _create_element(self, name: str) -> OxmlElement:
         return OxmlElement(name)
@@ -67,9 +129,18 @@ class DocxCreator:
 
 
         appendices = context.get('appendices', [])
+
+        valid_appendices = []
+        
         for appendix in appendices:
-            if appendix.get('path'):
-                appendix['image'] = InlineImage(doc_tpl, appendix['path'], width=Mm(167), height=Mm(100))
+            if not appendix.get('path'):
+                continue
+                
+            processed = self._process_image(doc_tpl, appendix['path'])
+            if processed:
+                valid_appendices.append({**appendix, **processed})
+
+        context['appendices'] = valid_appendices
 
 
         doc_tpl.render(context=context)
@@ -84,13 +155,12 @@ class DocxCreator:
 
         title_page = context.get('title_page', {})
         city = title_page.get('city', 'Город')
-        year = title_page.get('year', 2023)
+        year = title_page.get('year', 2025)
         self._add_footer(final_doc, city, year)
 
 
         output_docx_path = f'src/presentation/static/docx/{output_path}.docx'
         final_doc.save(output_docx_path)
-
         try:
             os.remove(temp_docx_path)
         except OSError as e:
